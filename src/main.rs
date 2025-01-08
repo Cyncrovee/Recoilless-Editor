@@ -13,23 +13,23 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
+    // Get cli argument(s) and set the file path to the args[1]
+    let args: Vec<String> = env::args().collect();
+    let file_path = args[1].to_string();
+
     // Declare widget(s) and their styling
     let mut input_area: TextArea = TextArea::default();
     input_area.set_line_number_style(Style::default());
     input_area.set_block(
         Block::default()
-            .title("Recoilless Editor")
+            .title(file_path.clone())
             .borders(Borders::ALL)
             .border_type(ratatui::widgets::BorderType::Rounded)
     );
-    
-    // Get cli argument(s) and set the file path to the args[1]
-    // Then get contents from file and add them to the input_area
-    let args: Vec<String> = env::args().collect();
-    let file_path = args[1].to_string();
+
+    // Get contents from file and add them to the input_area
     let file_contents = fs::read_to_string(file_path.clone());
     input_area.insert_str(file_contents.unwrap());
-
     // Declare a bool that will change depending on if the file is modified
     let mut is_modified = false;
 
