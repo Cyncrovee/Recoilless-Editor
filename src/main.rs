@@ -57,7 +57,8 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             Input { key: Key::Char('a'), ctrl: true, ..} => {
                 input_area.select_all();
             },
-            Input { key: Key::Char('s'), ctrl: true, ..} => {
+            // Save file
+            Input { key: Key::Char('s'), ctrl: true, alt: false, ..} => {
                 match is_modified {
                     true => {
                         let mut writer = io::BufWriter::new(fs::File::create(file_path.clone())?);
@@ -73,6 +74,27 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     }
                 }
             },
+            // Save file and quit
+            Input { key: Key::Char('s'), ctrl: true, alt: true, ..} => {
+                match is_modified {
+                    true => {
+                        let mut writer = io::BufWriter::new(fs::File::create(file_path.clone())?);
+                        for l in input_area.lines() {
+                            writer.write_all(l.as_bytes())?;
+                            writer.write_all(b"\n")?;
+                        }
+                        drop(writer);
+                        break Ok(());
+                    }
+                    false => {
+                        // Pass
+                    }
+                }
+            }
+            // Paste
+            Input { key: Key::Char('p'), ctrl: true, ..} => {
+                input_area.paste();
+            }
             // Make a newline
             Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
                 input_area.move_cursor(CursorMove::End);
