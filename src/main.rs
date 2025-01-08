@@ -60,20 +60,38 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     }
                 }
             },
-            Input { key: Key::Char('n'), ctrl: true, ..} => {
+            // Make a newline
+            Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
                 input_area.move_cursor(tui_textarea::CursorMove::End);
                 input_area.insert_newline();
             },
-            Input { key: Key::Char('n'), alt: true, ..} => {
+            Input { key: Key::Char('n'), alt: true, ctrl: false, ..} => {
                 input_area.move_cursor(tui_textarea::CursorMove::Up);
                 input_area.move_cursor(tui_textarea::CursorMove::End);
                 input_area.insert_newline();
             }
-            Input { key: Key::Char('w'), ctrl: true, ..} => {
+            // Move around by word
+            Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
                 input_area.move_cursor(tui_textarea::CursorMove::WordForward);
             }
-            Input { key: Key::Char('w'), alt: true, ..} => {
+            Input { key: Key::Char('w'), alt: true, ctrl: false, ..} => {
                 input_area.move_cursor(tui_textarea::CursorMove::WordBack);
+            }
+            // Delete word
+            Input { key: Key::Char('w'), alt: true, ctrl: true, ..} => {
+                input_area.delete_next_word();
+            }
+            // Move around by line
+            Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
+                input_area.move_cursor(tui_textarea::CursorMove::Up);
+            }
+            Input { key: Key::Char('l'), alt: true, ctrl: false, ..} => {
+                input_area.move_cursor(tui_textarea::CursorMove::Down);
+            }
+            // Delete line
+            Input { key: Key::Char('l'), alt: true, ctrl: true, ..} => {
+                input_area.move_cursor(tui_textarea::CursorMove::Head);
+                input_area.delete_line_by_end();
             }
             input => {
                 input_area.input(input);
