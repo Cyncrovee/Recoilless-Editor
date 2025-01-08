@@ -3,7 +3,7 @@ use std::{env, fs, io::{self, Write}};
 use color_eyre::{eyre::Ok, Result};
 use crossterm::event::{read, Event, KeyCode, KeyModifiers};
 use ratatui::{style::Style, widgets::{Block, Borders}, DefaultTerminal};
-use tui_textarea::TextArea;
+use tui_textarea::{Input, TextArea, Key};
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -34,18 +34,18 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     // Declare a bool that will change depending on if the file is modified
     let mut is_modified = false;
 
-    // Main rendering loop to draw widgets
+    // Main loop to draw widgets and handle key inputs
     loop {
         terminal.draw(|frame| {
             frame.render_widget(&input_area, frame.area());
         })?;
         // Get key input(s) and run appropriate functions for said input, or input it to the text area
-        if let Event::Key(key) = read()? {
-            if key.code == KeyCode::Esc {
-                break Ok(());
-            }
-            // Save file (ctrl + s)
-            else if key.modifiers == KeyModifiers::CONTROL && key.code == KeyCode::Char('s') && is_modified == true {
+        match crossterm::event::read()?.into() {
+            Input { key: Key::Esc, ..} => break Ok(()),
+            Input { key: Key::Char('a'), ctrl: true, ..} => {
+                input_area.select_all();
+            },
+            Input { key: Key::Char('s'), ctrl: true, ..} => {
                 let mut writer = io::BufWriter::new(fs::File::create(file_path.clone())?);
                 for l in input_area.lines(){
                     writer.write_all(l.as_bytes())?;
@@ -53,14 +53,11 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 }
                 is_modified = false;
                 drop(writer);
-                //break Ok(());
+            },
+            input => {
+                input_area.input(input);
+                is_modified = true;
             }
-            // Select all (ctrl + a)
-            else if key.modifiers == KeyModifiers::CONTROL && key.code == KeyCode::Char('a') {
-                input_area.select_all();
-            }
-            input_area.input(key);
-            is_modified = true;
         }
     }
 }
