@@ -19,7 +19,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
 
     // Declare widget(s) and their styling
     let mut input_area: TextArea = TextArea::default();
-    input_area.set_line_number_style(Style::default());
+    input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
     input_area.set_block(
         Block::default()
             .title(file_path.clone())
@@ -68,6 +68,12 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 input_area.move_cursor(tui_textarea::CursorMove::Up);
                 input_area.move_cursor(tui_textarea::CursorMove::End);
                 input_area.insert_newline();
+            }
+            Input { key: Key::Char('w'), ctrl: true, ..} => {
+                input_area.move_cursor(tui_textarea::CursorMove::WordForward);
+            }
+            Input { key: Key::Char('w'), alt: true, ..} => {
+                input_area.move_cursor(tui_textarea::CursorMove::WordBack);
             }
             input => {
                 input_area.input(input);
