@@ -1,0 +1,12 @@
+[package]
+name = "recoilless_editor"
+version = "0.1.0"
+authors = ["Cyncrovee <86919717+Cyncrovee@users.noreply.github.com>"]
+license = "MIT"
+edition = "2021"
+
+[dependencies]
+color-eyre = "0.6.3"
+crossterm = "0.28.1"
+ratatui = "0.29.0"
+tui-textarea = "0.7.0"
