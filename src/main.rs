@@ -46,13 +46,20 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 input_area.select_all();
             },
             Input { key: Key::Char('s'), ctrl: true, ..} => {
-                let mut writer = io::BufWriter::new(fs::File::create(file_path.clone())?);
-                for l in input_area.lines(){
-                    writer.write_all(l.as_bytes())?;
-                    writer.write_all(b"\n")?;
+                match is_modified {
+                    true => {
+                        let mut writer = io::BufWriter::new(fs::File::create(file_path.clone())?);
+                        for l in input_area.lines(){
+                            writer.write_all(l.as_bytes())?;
+                            writer.write_all(b"\n")?;
+                        }
+                        is_modified = false;
+                        drop(writer);
+                    }
+                    false => {
+                        // Pass
+                    }
                 }
-                is_modified = false;
-                drop(writer);
             },
             input => {
                 input_area.input(input);
