@@ -1,7 +1,6 @@
 use std::{env, fs, io::{self, Write}};
 
 use color_eyre::{eyre::Ok, Result};
-use crossterm::event::{read, Event, KeyCode, KeyModifiers};
 use ratatui::{style::Style, widgets::{Block, Borders}, DefaultTerminal};
 use tui_textarea::{Input, TextArea, Key};
 
