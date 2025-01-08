@@ -61,6 +61,15 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     }
                 }
             },
+            Input { key: Key::Char('n'), ctrl: true, ..} => {
+                input_area.move_cursor(tui_textarea::CursorMove::End);
+                input_area.insert_newline();
+            },
+            Input { key: Key::Char('n'), alt: true, ..} => {
+                input_area.move_cursor(tui_textarea::CursorMove::Up);
+                input_area.move_cursor(tui_textarea::CursorMove::End);
+                input_area.insert_newline();
+            }
             input => {
                 input_area.input(input);
                 is_modified = true;
