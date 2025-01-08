@@ -2,7 +2,7 @@ use std::{env, fs, io::{self, Write}};
 
 use color_eyre::{eyre::Ok, Result};
 use ratatui::{style::Style, widgets::{Block, Borders}, DefaultTerminal};
-use tui_textarea::{Input, TextArea, Key};
+use tui_textarea::{Input, TextArea, Key, CursorMove};
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -75,20 +75,20 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             },
             // Make a newline
             Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(tui_textarea::CursorMove::End);
+                input_area.move_cursor(CursorMove::End);
                 input_area.insert_newline();
             },
             Input { key: Key::Char('n'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(tui_textarea::CursorMove::Up);
-                input_area.move_cursor(tui_textarea::CursorMove::End);
+                input_area.move_cursor(CursorMove::Up);
+                input_area.move_cursor(CursorMove::End);
                 input_area.insert_newline();
             }
             // Move around by word
             Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(tui_textarea::CursorMove::WordForward);
+                input_area.move_cursor(CursorMove::WordForward);
             }
             Input { key: Key::Char('w'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(tui_textarea::CursorMove::WordBack);
+                input_area.move_cursor(CursorMove::WordBack);
             }
             // Delete word
             Input { key: Key::Char('w'), alt: true, ctrl: true, ..} => {
@@ -96,14 +96,14 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             }
             // Move around by line
             Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(tui_textarea::CursorMove::Up);
+                input_area.move_cursor(CursorMove::Up);
             }
             Input { key: Key::Char('l'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(tui_textarea::CursorMove::Down);
+                input_area.move_cursor(CursorMove::Down);
             }
             // Delete line
             Input { key: Key::Char('l'), alt: true, ctrl: true, ..} => {
-                input_area.move_cursor(tui_textarea::CursorMove::Head);
+                input_area.move_cursor(CursorMove::Head);
                 input_area.delete_line_by_end();
             }
             input => {
