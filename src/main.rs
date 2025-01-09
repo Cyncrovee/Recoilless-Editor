@@ -13,22 +13,8 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
-    // Get cli argument(s) and set the file path to the args[1]
-    let file_path:String;
-    let args: Vec<String> = env::args().collect();
-    if args[1] == "-p" || args[1] == "--path" {
-        file_path = args[2].to_string();
-    }
-    else if args[1] == "-n" || args[1] == "--name" {
-        let dir_path = env::current_dir()?;
-        let dir_path_string = dir_path.into_os_string().into_string().unwrap();
-        file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[2].to_string().as_str();
-    }
-    else {
-        let dir_path = env::current_dir()?;
-        let dir_path_string = dir_path.into_os_string().into_string().unwrap();
-        file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[1].to_string().as_str();
-    }
+    // Set file path
+    let file_path = get_file_path();
 
     // Declare widget(s) and their styling
     let mut input_area: TextArea = TextArea::default();
@@ -133,5 +119,27 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 is_modified = true;
             }
         }
+    }
+}
+
+// Get cli argument(s) and return the file path
+fn get_file_path() -> String {
+    let local_file_path: String;
+    let args: Vec<String> = env::args().collect();
+    if args[1] == "-p" || args[1] == "--path" {
+        local_file_path = args[2].to_string();
+        return local_file_path;
+    }
+    else if args[1] == "-n" || args[1] == "--name" {
+        let dir_path = env::current_dir().expect("Couldn't fetch current directory");
+        let dir_path_string = dir_path.into_os_string().into_string().unwrap();
+        local_file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[2].to_string().as_str();
+        return local_file_path;
+    }
+    else {
+        let dir_path = env::current_dir().expect("Couldn't fetch current directory");
+        let dir_path_string = dir_path.into_os_string().into_string().unwrap();
+        local_file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[1].to_string().as_str();
+        return local_file_path;
     }
 }
