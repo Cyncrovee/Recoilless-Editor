@@ -114,6 +114,20 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 input_area.move_cursor(CursorMove::Head);
                 input_area.delete_line_by_end();
             }
+            // Jump to start/end of line
+            Input { key: Key::Char('e'), ctrl: true, alt: false, ..} => {
+                input_area.move_cursor(CursorMove::Head);
+            }
+            Input { key: Key::Char('e'), alt: true, ctrl: false, ..} => {
+                input_area.move_cursor(CursorMove::End);
+            }
+            // Jump to start/end of file
+            Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
+                input_area.move_cursor(CursorMove::Top);
+            }
+            Input { key: Key::Char('j'), alt: true, ctrl: false, ..} => {
+                input_area.move_cursor(CursorMove::Bottom);
+            }
             input => {
                 input_area.input(input);
                 is_modified = true;
