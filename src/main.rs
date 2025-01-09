@@ -28,7 +28,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
 
     // Get contents from file and add them to the input_area
     let file_contents = fs::read_to_string(file_path.clone());
-    input_area.insert_str(file_contents.unwrap());
+    input_area.insert_str(file_contents.expect("Failed to unwrap file contents"));
     // Declare a bool that will change depending on if the file is modified
     let mut is_modified = false;
 
@@ -132,13 +132,13 @@ fn get_file_path() -> String {
     }
     else if args[1] == "-n" || args[1] == "--name" {
         let dir_path = env::current_dir().expect("Couldn't fetch current directory");
-        let dir_path_string = dir_path.into_os_string().into_string().unwrap();
+        let dir_path_string = dir_path.into_os_string().into_string().expect("Failed to convert current directory into String");
         local_file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[2].to_string().as_str();
         return local_file_path;
     }
     else {
         let dir_path = env::current_dir().expect("Couldn't fetch current directory");
-        let dir_path_string = dir_path.into_os_string().into_string().unwrap();
+        let dir_path_string = dir_path.into_os_string().into_string().expect("Failed to convert current directory into String");
         local_file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[1].to_string().as_str();
         return local_file_path;
     }
