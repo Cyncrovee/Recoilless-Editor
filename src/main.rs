@@ -27,7 +27,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     );
 
     // Get contents from file and add them to the input_area
-    let file_contents = fs::read_to_string(file_path.clone());
+    let file_contents = fs::read_to_string(&file_path);
     input_area.insert_str(file_contents.expect("Failed to unwrap file contents"));
     // Declare a bool that will change depending on if the file is modified
     let mut is_modified = false;
@@ -47,13 +47,13 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             Input { key: Key::Char('s'), ctrl: true, alt: false, ..} => {
                 match is_modified {
                     true => {
-                        let mut writer = io::BufWriter::new(fs::File::create(file_path.clone())?);
-                        for l in input_area.lines(){
+                        let mut writer = io::BufWriter::new(fs::File::create(&file_path)?);
+                        for l in input_area.lines() {
                             writer.write_all(l.as_bytes())?;
                             writer.write_all(b"\n")?;
                         }
-                        is_modified = false;
                         drop(writer);
+                        is_modified = false;
                     }
                     false => {
                         // Pass
@@ -64,7 +64,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             Input { key: Key::Char('s'), ctrl: true, alt: true, ..} => {
                 match is_modified {
                     true => {
-                        let mut writer = io::BufWriter::new(fs::File::create(file_path.clone())?);
+                        let mut writer = io::BufWriter::new(fs::File::create(&file_path)?);
                         for l in input_area.lines() {
                             writer.write_all(l.as_bytes())?;
                             writer.write_all(b"\n")?;
