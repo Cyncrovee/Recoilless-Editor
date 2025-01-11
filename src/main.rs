@@ -1,8 +1,10 @@
-use std::{env, fs, io::{self, Write}};
+use std::fs;
 
 use color_eyre::{eyre::Ok, Result};
 use ratatui::{style::Style, widgets::{Block, Borders}, DefaultTerminal};
 use tui_textarea::{Input, TextArea, Key, CursorMove};
+
+mod misc_handler;
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -14,7 +16,7 @@ fn main() -> Result<()> {
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
     // Set file path
-    let file_path = get_file_path();
+    let file_path = misc_handler::get_file_path();
 
     // Declare widget(s) and their styling
     let mut input_area: TextArea = TextArea::default();
@@ -29,7 +31,8 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     // Get contents from file and add them to the input_area
     let file_contents = fs::read_to_string(&file_path);
     input_area.insert_str(file_contents.expect("Failed to unwrap file contents"));
-    // Declare a bool that will change depending on if the file is modified
+    // Declare a bool that will be true when input_area.input(input); is called (see the input events below)
+    // And be false after saving (except when saving and quitting)
     let mut is_modified = false;
 
     // Main loop to draw widgets and handle key inputs
@@ -45,37 +48,13 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             },
             // Save file
             Input { key: Key::Char('s'), ctrl: true, alt: false, ..} => {
-                match is_modified {
-                    true => {
-                        let mut writer = io::BufWriter::new(fs::File::create(&file_path)?);
-                        for l in input_area.lines() {
-                            writer.write_all(l.as_bytes())?;
-                            writer.write_all(b"\n")?;
-                        }
-                        drop(writer);
-                        is_modified = false;
-                    }
-                    false => {
-                        // Pass
-                    }
-                }
+                misc_handler::save_file(&is_modified, &file_path, &mut input_area);
+                is_modified = false;
             },
             // Save file and quit
             Input { key: Key::Char('s'), ctrl: true, alt: true, ..} => {
-                match is_modified {
-                    true => {
-                        let mut writer = io::BufWriter::new(fs::File::create(&file_path)?);
-                        for l in input_area.lines() {
-                            writer.write_all(l.as_bytes())?;
-                            writer.write_all(b"\n")?;
-                        }
-                        drop(writer);
-                        break Ok(());
-                    }
-                    false => {
-                        // Pass
-                    }
-                }
+                misc_handler::save_file(&is_modified, &file_path, &mut input_area);
+                break Ok(());
             }
             // Paste
             Input { key: Key::Char('p'), ctrl: true, ..} => {
@@ -133,27 +112,5 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 is_modified = true;
             }
         }
-    }
-}
-
-// Get cli argument(s) and return the file path
-fn get_file_path() -> String {
-    let local_file_path: String;
-    let args: Vec<String> = env::args().collect();
-    if args[1] == "-p" || args[1] == "--path" {
-        local_file_path = args[2].to_string();
-        return local_file_path;
-    }
-    else if args[1] == "-n" || args[1] == "--name" {
-        let dir_path = env::current_dir().expect("Couldn't fetch current directory");
-        let dir_path_string = dir_path.into_os_string().into_string().expect("Failed to convert current directory into String");
-        local_file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[2].to_string().as_str();
-        return local_file_path;
-    }
-    else {
-        let dir_path = env::current_dir().expect("Couldn't fetch current directory");
-        let dir_path_string = dir_path.into_os_string().into_string().expect("Failed to convert current directory into String");
-        local_file_path = dir_path_string + std::path::MAIN_SEPARATOR_STR + args[1].to_string().as_str();
-        return local_file_path;
     }
 }
