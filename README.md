@@ -2,6 +2,8 @@
 A free and open source TUI text editor
 
 # Usage
+## WARNING (IMPORTANT)
+When resizing the window with the program open, it may flicker! Be careful when using it if you have photosensitive epilepsy or a similar condition.
 ## Prerequisites
 - Rust installed on the system
 ## Running

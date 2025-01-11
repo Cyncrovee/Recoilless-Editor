@@ -1,10 +1,20 @@
 use std::fs;
 
 use color_eyre::{eyre::Ok, Result};
-use ratatui::{style::Style, widgets::{Block, Borders}, DefaultTerminal};
+use ratatui::{layout::{self, Rect}, style::Style, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
 use tui_textarea::{Input, TextArea, Key, CursorMove};
 
 mod misc_handler;
+
+struct StatusBarStruct<'a> {
+    status_area: Rect,
+    status_paragraph: Paragraph<'a>,
+    status_text: Text<'a>,
+    cursor_line: usize,
+    cursor_row: usize,
+    cursor_pos: String,
+    seperator: &'a str
+}
 
 fn main() -> Result<()> {
     color_eyre::install()?;
@@ -17,8 +27,18 @@ fn main() -> Result<()> {
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
     // Set file path
     let file_path = misc_handler::get_file_path();
+    // Initialise StatusBarStruct
+    let mut status_bar = StatusBarStruct {
+        status_area: Rect::new(0, 0, 0, 0),
+        status_paragraph: widgets::Paragraph::new("").alignment(ratatui::layout::Alignment::Left),
+        status_text: "".into(),
+        cursor_line: std::usize::MIN,
+        cursor_row: std::usize::MIN,
+        cursor_pos: "".into(),
+        seperator: ":"
+    };
 
-    // Declare widget(s) and their styling
+    // Declare input_area and it's block/styling
     let mut input_area: TextArea = TextArea::default();
     input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
     input_area.set_block(
@@ -39,6 +59,8 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     loop {
         terminal.draw(|frame| {
             frame.render_widget(&input_area, frame.area());
+            status_bar.status_area = Rect::new(0, frame.area().bottom(), 1000, 1);
+            frame.render_widget(&status_bar.status_paragraph, status_bar.status_area.clamp(frame.area()));
         })?;
         // Get key input(s) and run appropriate functions for said input, or input it to the text area
         match crossterm::event::read()?.into() {
@@ -110,6 +132,13 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             input => {
                 input_area.input(input);
                 is_modified = true;
+                status_bar.cursor_line = &input_area.cursor().0 + 1;
+                status_bar.cursor_row = &input_area.cursor().1 + 1;
+                status_bar.seperator = ":";
+                status_bar.cursor_pos = format!("{cursor_line}{seperator}{cursor_row}", cursor_line = status_bar.cursor_line, seperator = status_bar.seperator, cursor_row = status_bar.cursor_row);
+                status_bar.status_text = Text::from(status_bar.cursor_pos);
+                status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
+                    .alignment(layout::Alignment::Left);
             }
         }
     }

@@ -4,6 +4,7 @@ version = "0.1.0"
 authors = ["Cyncrovee <86919717+Cyncrovee@users.noreply.github.com>"]
 license = "MIT"
 edition = "2021"
+readme = "README.md"
 
 [dependencies]
 color-eyre = "0.6.3"
