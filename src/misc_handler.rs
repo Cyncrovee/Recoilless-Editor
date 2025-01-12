@@ -23,6 +23,11 @@ pub fn get_file_path() -> String {
     }
 }
 
+pub fn get_file_size(file_path: &String) -> String {
+    let mut file_size = fs::File::open(&file_path).expect("Failed to open file in get_file_size").metadata().expect("Failed to get file metadata in get_file_size").len().to_string();
+    file_size.push_str(" Bytes Saved ");
+    return file_size;
+}
 
 // Save the current file (if is_modified is true)
 pub fn save_file(is_modified: &bool, file_path: &String, input_area: &mut TextArea) {

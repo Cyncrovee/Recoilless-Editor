@@ -1,6 +1,7 @@
 use std::{fs, path::Path};
 
 use color_eyre::{eyre::Ok, Result};
+use misc_handler::get_file_size;
 use ratatui::{layout::{self, Rect}, style::Style, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
 use tui_textarea::{Input, TextArea, Key, CursorMove};
 
@@ -13,8 +14,8 @@ struct StatusBarStruct<'a> {
     cursor_line: usize,
     cursor_row: usize,
     cursor_pos: String,
-    seperator: &'a str,
-    space: &'a str
+    cursor_seperator: &'a str,
+    seperator: &'a str
 }
 
 fn main() -> Result<()> {
@@ -26,9 +27,12 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
-    // Set file path
+    // Get file path, file size and file type
     let file_path = misc_handler::get_file_path();
+    let mut file_size = misc_handler::get_file_size(&file_path);
     let mut file_type: &str = Path::new(&file_path).extension().unwrap().to_str().unwrap();
+    // Convert file extension if applicable
+    file_type = misc_handler::convert_extension(file_type);
     // Initialise StatusBarStruct
     let mut status_bar = StatusBarStruct {
         status_area: Rect::new(0, 0, 0, 0),
@@ -37,10 +41,9 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
         cursor_line: std::usize::MIN,
         cursor_row: std::usize::MIN,
         cursor_pos: "".into(),
-        seperator: ":",
-        space: " "
+        cursor_seperator: ":",
+        seperator: " | "
     };
-    file_type = misc_handler::convert_extension(file_type);
 
     // Declare input_area and it's block/styling
     let mut input_area: TextArea = TextArea::default();
@@ -75,6 +78,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             // Save file
             Input { key: Key::Char('s'), ctrl: true, alt: false, ..} => {
                 misc_handler::save_file(&is_modified, &file_path, &mut input_area);
+                file_size = get_file_size(&file_path);
                 is_modified = false;
             },
             // Save file and quit
@@ -138,7 +142,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 is_modified = true;
                 status_bar.cursor_line = &input_area.cursor().0 + 1;
                 status_bar.cursor_row = &input_area.cursor().1 + 1;
-                status_bar.cursor_pos = format!("{cursor_line}{seperator}{cursor_row}{space}{file_type}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, seperator = &status_bar.seperator, space = &status_bar.space);
+                status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
                 status_bar.status_text = Text::from(status_bar.cursor_pos);
                 status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
                     .alignment(layout::Alignment::Left);
