@@ -56,6 +56,22 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             file_type = "Markdown File";
             return file_type;
         }
+        "XML" => {
+            file_type = "XML File";
+            return file_type;
+        }
+        "XAML" => {
+            file_type = "XAML File";
+            return file_type;
+        }
+        "AXAML" => {
+            file_type = "AXAML File";
+            return file_type;
+        }
+        "JSON" => {
+            file_type = "JSON File";
+            return file_type;
+        }
         "toml" => {
             file_type = "TOML File";
             return file_type;
@@ -69,8 +85,16 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             file_type = "Shell Script";
             return file_type;
         }
+        "gd" => {
+            file_type = "GDScript Source File";
+            return file_type;
+        }
         "rs" => {
             file_type = "Rust Source File";
+            return file_type;
+        }
+        "zig" => {
+            file_type = "Zig Source File";
             return file_type;
         }
         "cs" => {
@@ -79,6 +103,10 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }
         "py" => {
             file_type = "Python Source File";
+            return file_type;
+        }
+        "java" => {
+            file_type = "Java Source File";
             return file_type;
         }
         "go" => {
