@@ -18,3 +18,8 @@ There also may be some duplicates (i.e two keybinds that do the same thing), jus
 - Ctrl + Alt + l: Delete line
 - Ctrl + n :Make a new line below current line
 - Alt + n :Make a new line above current line
+
+## Editor
+- Esc: Exit program
+- Ctrl + s: Save file
+- Ctrl + Alt + s: Save file and exit program
