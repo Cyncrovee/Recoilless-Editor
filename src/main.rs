@@ -1,4 +1,4 @@
-use std::fs;
+use std::{fs, path::Path};
 
 use color_eyre::{eyre::Ok, Result};
 use ratatui::{layout::{self, Rect}, style::Style, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
@@ -13,7 +13,8 @@ struct StatusBarStruct<'a> {
     cursor_line: usize,
     cursor_row: usize,
     cursor_pos: String,
-    seperator: &'a str
+    seperator: &'a str,
+    space: &'a str
 }
 
 fn main() -> Result<()> {
@@ -27,6 +28,7 @@ fn main() -> Result<()> {
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
     // Set file path
     let file_path = misc_handler::get_file_path();
+    let mut file_extension: &str = Path::new(&file_path).extension().unwrap().to_str().unwrap();
     // Initialise StatusBarStruct
     let mut status_bar = StatusBarStruct {
         status_area: Rect::new(0, 0, 0, 0),
@@ -35,8 +37,10 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
         cursor_line: std::usize::MIN,
         cursor_row: std::usize::MIN,
         cursor_pos: "".into(),
-        seperator: ":"
+        seperator: ":",
+        space: " "
     };
+    file_extension = misc_handler::convert_extension(file_extension);
 
     // Declare input_area and it's block/styling
     let mut input_area: TextArea = TextArea::default();
@@ -134,8 +138,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 is_modified = true;
                 status_bar.cursor_line = &input_area.cursor().0 + 1;
                 status_bar.cursor_row = &input_area.cursor().1 + 1;
-                status_bar.seperator = ":";
-                status_bar.cursor_pos = format!("{cursor_line}{seperator}{cursor_row}", cursor_line = status_bar.cursor_line, seperator = status_bar.seperator, cursor_row = status_bar.cursor_row);
+                status_bar.cursor_pos = format!("{cursor_line}{seperator}{cursor_row}{space}{file_extension}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, seperator = &status_bar.seperator, space = &status_bar.space);
                 status_bar.status_text = Text::from(status_bar.cursor_pos);
                 status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
                     .alignment(layout::Alignment::Left);

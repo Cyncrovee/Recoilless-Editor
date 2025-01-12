@@ -40,3 +40,80 @@ pub fn save_file(is_modified: &bool, file_path: &String, input_area: &mut TextAr
         }
     }
 }
+
+pub fn convert_extension(mut file_type: &str) -> &str {
+    match file_type {
+        "txt" => {
+            file_type = "Text File";
+            return file_type;
+        }
+        "md" => {
+            file_type = "Markdown File";
+            return file_type;
+        }
+        "toml" => {
+            file_type = "TOML File";
+            return file_type;
+        }
+        // Commented out due to confusion over c/c++ file extensions
+        /*"c" => {
+            file_type = "C Source File";
+            return file_type;
+        }*/
+        "sh" => {
+            file_type = "Shell Script";
+            return file_type;
+        }
+        "rs" => {
+            file_type = "Rust Source File";
+            return file_type;
+        }
+        "cs" => {
+            file_type = "C# Source File";
+            return file_type;
+        }
+        "py" => {
+            file_type = "Python Source File";
+            return file_type;
+        }
+        "go" => {
+            file_type = "GOLANG Source File";
+            return file_type;
+        }
+        "lua" => {
+            file_type = "Lua Source File";
+            return file_type;
+        }
+        "cr" => {
+            file_type = "Crystal Source File";
+            return file_type;
+        }
+        "hx" => {
+            file_type = "Haxe Source File";
+            return file_type;
+        }
+        "dart" => {
+            file_type = "Dart Source File";
+            return file_type;
+        }
+        "rb" => {
+            file_type = "Ruby Source File";
+            return file_type;
+        }
+        "php" => {
+            file_type = "PHP Source File";
+            return file_type;
+        }
+        "js" => {
+            file_type = "JavaScript Source File";
+            return file_type;
+        }
+        "ts" => {
+            file_type = "TypeScript Source File";
+            return file_type;
+        }
+        &_ => {
+            return file_type;
+        }
+    }
+}
