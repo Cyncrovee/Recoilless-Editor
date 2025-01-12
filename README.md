@@ -13,6 +13,11 @@ cargo run -- "file-path"
 ```
 - Replace "file-path" with the path to the file to edit. Speech marks should only be needed if the file path contains one or more spaces
 
+## Features:
+- A status bar showing some basic information about the editor/file
+- Line numbers
+- Modifier key based keybinds (refer to the keybind-reference.md file)
+
 ## Misc Info
 This is a [Ratatui] app made based off the [Hello World template].
 
