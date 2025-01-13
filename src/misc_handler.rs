@@ -1,6 +1,29 @@
 use std::{env, fs, io::{self, Write}};
 use tui_textarea::TextArea;
 
+pub fn help_arg() {
+    let args: Vec<String> = std::env::args().collect();
+    match args[1].as_str() {
+        "-h" | "--help"=> {
+            println!("------------------------------------------------------------------------");
+            println!("To open a file in Recoilless Editor, you can use the arguments listed below:");
+            println!("");
+            println!("  -n OR --name filename");
+            println!("      Replace filename with the name and extension of the file you are trying to open if applicable");
+            println!("  -p OR --path filepath");
+            println!("      Replace filepath with the full path, name, and extension of the file you are trying to open if applicable");
+            println!("");
+            println!("You can also open a file by simply adding the file name/extension as the first flag. Both this and -n/--name work based off the current working directory, so you can also input a file path from that directory.");
+            println!("------------------------------------------------------------------------");
+            std::process::exit(0);
+        }
+        _ => {
+            // Pass
+        }
+    }
+    drop(args);
+}
+
 // Get cli argument(s) and return the file path
 pub fn get_file_path() -> String {
     let local_file_path: String;
