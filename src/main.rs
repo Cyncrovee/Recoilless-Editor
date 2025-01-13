@@ -28,8 +28,9 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
-    // Set is_insert_mode
-    let mut is_insert_mode = false;
+    // Set editor mode variables
+    let mut is_edit_mode = true;
+    let mut editor_mode = "Edit";
     // Get file path, file size and file type
     let file_path = misc_handler::get_file_path();
     let mut file_size = misc_handler::get_file_size(&file_path);
@@ -73,28 +74,34 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             frame.render_widget(&status_bar.status_paragraph, status_bar.status_area.clamp(frame.area()));
         })?;
         // Get key input(s) and run appropriate functions for said input, or input it to the text area
-        match is_insert_mode {
-            true => {
+        match is_edit_mode {
+            false => {
                 match crossterm::event::read()?.into() {
-                    Input { key: Key::Esc, .. } => is_insert_mode = false,
+                    Input { key: Key::Esc, .. } => {
+                        is_edit_mode = true;
+                        editor_mode = "Edit"
+                    },
                     input => {
                         input_area.input(input);
                         is_modified = true;
                         status_bar.cursor_line = &input_area.cursor().0 + 1;
                         status_bar.cursor_row = &input_area.cursor().1 + 1;
-                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
                         status_bar.status_text = Text::from(status_bar.cursor_pos);
                         status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
                             .alignment(layout::Alignment::Left);
                     }
                 }
             }
-            false => {
+            true => {
                 match crossterm::event::read()?.into() {
                     // Exit program
                     Input { key: Key::Home, ctrl: true, .. } => break Ok(()),
                     // Go to insert mode
-                    Input { key: Key::Char('i'), .. } => is_insert_mode = true,
+                    Input { key: Key::Char('i'), .. } => {
+                        is_edit_mode = false;
+                        editor_mode = "Ins";
+                    },
                     // Save file
                     Input { key: Key::Char('s'), ctrl: true, alt: false, .. } => {
                         misc_handler::save_file(&is_modified, &file_path, &mut input_area);
@@ -102,7 +109,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         is_modified = false;
                     },
                     // Save file and exit
-                    Input { key: Key::Char('s'), ctrl: false, alt: true, .. } => {
+                    Input { key: Key::Char('s'), ctrl: true, alt: true, .. } => {
                         misc_handler::save_file(&is_modified, &file_path, &mut input_area);
                         break Ok(());
                     },
@@ -195,14 +202,14 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         input_area.redo();
                     }
                     // Paste
-                    Input { key: Key::Char('p'), ctrl: true, ..} => {
+                    Input { key: Key::Char('p'), ..} => {
                         input_area.paste();
                     }
                     _input => {
                         is_modified = true;
                         status_bar.cursor_line = &input_area.cursor().0 + 1;
                         status_bar.cursor_row = &input_area.cursor().1 + 1;
-                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
                         status_bar.status_text = Text::from(status_bar.cursor_pos);
                         status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
                             .alignment(layout::Alignment::Left);
