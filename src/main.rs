@@ -28,6 +28,8 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
+    // Set is_insert_mode
+    let mut is_insert_mode = false;
     // Get file path, file size and file type
     let file_path = misc_handler::get_file_path();
     let mut file_size = misc_handler::get_file_size(&file_path);
@@ -71,82 +73,141 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             frame.render_widget(&status_bar.status_paragraph, status_bar.status_area.clamp(frame.area()));
         })?;
         // Get key input(s) and run appropriate functions for said input, or input it to the text area
-        match crossterm::event::read()?.into() {
-            Input { key: Key::Esc, ..} => break Ok(()),
-            Input { key: Key::Char('a'), ctrl: true, ..} => {
-                input_area.select_all();
-            },
-            // Save file
-            Input { key: Key::Char('s'), ctrl: true, alt: false, ..} => {
-                misc_handler::save_file(&is_modified, &file_path, &mut input_area);
-                file_size = get_file_size(&file_path);
-                is_modified = false;
-            },
-            // Save file and quit
-            Input { key: Key::Char('s'), ctrl: true, alt: true, ..} => {
-                misc_handler::save_file(&is_modified, &file_path, &mut input_area);
-                break Ok(());
+        match is_insert_mode {
+            true => {
+                match crossterm::event::read()?.into() {
+                    Input { key: Key::Esc, .. } => is_insert_mode = false,
+                    input => {
+                        input_area.input(input);
+                        is_modified = true;
+                        status_bar.cursor_line = &input_area.cursor().0 + 1;
+                        status_bar.cursor_row = &input_area.cursor().1 + 1;
+                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+                        status_bar.status_text = Text::from(status_bar.cursor_pos);
+                        status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
+                            .alignment(layout::Alignment::Left);
+                    }
+                }
             }
-            // Paste
-            Input { key: Key::Char('p'), ctrl: true, ..} => {
-                input_area.paste();
-            }
-            // Make a newline
-            Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(CursorMove::End);
-                input_area.insert_newline();
-            },
-            Input { key: Key::Char('n'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(CursorMove::Up);
-                input_area.move_cursor(CursorMove::End);
-                input_area.insert_newline();
-            }
-            // Move around by word
-            Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(CursorMove::WordForward);
-            }
-            Input { key: Key::Char('w'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(CursorMove::WordBack);
-            }
-            // Delete word
-            Input { key: Key::Char('w'), alt: true, ctrl: true, ..} => {
-                input_area.delete_next_word();
-            }
-            // Move around by line
-            Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(CursorMove::Up);
-            }
-            Input { key: Key::Char('l'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(CursorMove::Down);
-            }
-            // Delete line
-            Input { key: Key::Char('l'), alt: true, ctrl: true, ..} => {
-                input_area.move_cursor(CursorMove::Head);
-                input_area.delete_line_by_end();
-            }
-            // Jump to start/end of line
-            Input { key: Key::Char('e'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(CursorMove::Head);
-            }
-            Input { key: Key::Char('e'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(CursorMove::End);
-            }
-            // Jump to start/end of file
-            Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
-                input_area.move_cursor(CursorMove::Top);
-            }
-            Input { key: Key::Char('j'), alt: true, ctrl: false, ..} => {
-                input_area.move_cursor(CursorMove::Bottom);
-            }
-            input => {
-                input_area.input(input);
-                is_modified = true;
-                status_bar.cursor_line = &input_area.cursor().0 + 1;
-                status_bar.cursor_row = &input_area.cursor().1 + 1;
-                status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
-                status_bar.status_text = Text::from(status_bar.cursor_pos);
-                status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
-                    .alignment(layout::Alignment::Left);
+            false => {
+                match crossterm::event::read()?.into() {
+                    // Exit program
+                    Input { key: Key::Home, ctrl: true, .. } => break Ok(()),
+                    // Go to insert mode
+                    Input { key: Key::Char('i'), .. } => is_insert_mode = true,
+                    // Save file
+                    Input { key: Key::Char('s'), ctrl: true, alt: false, .. } => {
+                        misc_handler::save_file(&is_modified, &file_path, &mut input_area);
+                        file_size = get_file_size(&file_path);
+                        is_modified = false;
+                    },
+                    // Save file and exit
+                    Input { key: Key::Char('s'), ctrl: false, alt: true, .. } => {
+                        misc_handler::save_file(&is_modified, &file_path, &mut input_area);
+                        break Ok(());
+                    },
+                    // General movement (hjkl, arrow keys)
+                    Input { key: Key::Char('h'), .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Back);
+                    },
+                    Input { key: Key::Char('j'), ctrl: false, alt: false, .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Down);
+                    },
+                    Input { key: Key::Char('k'), .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Up);
+                    },
+                    Input { key: Key::Char('l'), ctrl: false, alt: false, .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Forward);
+                    },
+                    Input { key: Key::Left, .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Back);
+                    },
+                    Input { key: Key::Down, .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Down);
+                    },
+                    Input { key: Key::Up, .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Up);
+                    },
+                    Input { key: Key::Right, .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Forward);
+                    },
+                    // Move around by word
+                    Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
+                        input_area.move_cursor(CursorMove::WordForward);
+                    }
+                    Input { key: Key::Char('w'), alt: true, ctrl: false, ..} => {
+                        input_area.move_cursor(CursorMove::WordBack);
+                    }
+                    // Delete word
+                    Input { key: Key::Char('w'), alt: true, ctrl: true, ..} => {
+                        input_area.delete_next_word();
+                    }
+                    // Move around by line
+                    Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
+                        input_area.move_cursor(CursorMove::Up);
+                    }
+                    Input { key: Key::Char('l'), alt: true, ctrl: false, ..} => {
+                        input_area.move_cursor(CursorMove::Down);
+                    }
+                    // Delete line
+                    Input { key: Key::Char('l'), alt: true, ctrl: true, ..} => {
+                        input_area.move_cursor(CursorMove::Head);
+                        input_area.delete_line_by_end();
+                    }
+                    // Make a newline
+                    Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
+                        input_area.move_cursor(CursorMove::End);
+                        input_area.insert_newline();
+                    },
+                    Input { key: Key::Char('n'), alt: true, ctrl: false, ..} => {
+                        input_area.move_cursor(CursorMove::Up);
+                        input_area.move_cursor(CursorMove::End);
+                        input_area.insert_newline();
+                    }
+                    // Jump to start/end of line
+                    Input { key: Key::Char('e'), ctrl: true, alt: false, ..} => {
+                        input_area.move_cursor(CursorMove::Head);
+                    }
+                    Input { key: Key::Char('e'), alt: true, ctrl: false, ..} => {
+                        input_area.move_cursor(CursorMove::End);
+                    }
+                    // Jump to start/end of file
+                    Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
+                        input_area.move_cursor(CursorMove::Top);
+                    }
+                    Input { key: Key::Char('j'), alt: true, ctrl: false, ..} => {
+                        input_area.move_cursor(CursorMove::Bottom);
+                    }
+                    // Undo
+                    Input { key: Key::Char('u'), ..} => {
+                        input_area.undo();
+                    }
+                    // Redo
+                    Input { key: Key::Char('r'), ..} => {
+                        input_area.redo();
+                    }
+                    // Paste
+                    Input { key: Key::Char('p'), ctrl: true, ..} => {
+                        input_area.paste();
+                    }
+                    _input => {
+                        is_modified = true;
+                        status_bar.cursor_line = &input_area.cursor().0 + 1;
+                        status_bar.cursor_row = &input_area.cursor().1 + 1;
+                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+                        status_bar.status_text = Text::from(status_bar.cursor_pos);
+                        status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
+                            .alignment(layout::Alignment::Left);
+                    }
+                }
             }
         }
     }

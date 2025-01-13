@@ -1,3 +1,5 @@
+# OUTDATED, PENDING UPDATE
+
 # Recoiless Editor Keybinds
 Below is an overview of some of the keybinds for the editor (not all are included here, but this should cover most of the commonly used ones).
 
