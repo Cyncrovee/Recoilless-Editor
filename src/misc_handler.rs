@@ -1,27 +1,37 @@
 use std::{env, fs, io::{self, Write}};
 use tui_textarea::TextArea;
 
-pub fn help_arg() {
+pub fn boot_arg() {
     let args: Vec<String> = std::env::args().collect();
-    match args[1].as_str() {
-        "-h" | "--help"=> {
-            println!("------------------------------------------------------------------------");
-            println!("To open a file in Recoilless Editor, you can use the arguments listed below:");
-            println!("");
-            println!("  -n OR --name filename");
-            println!("      Replace filename with the name and extension of the file you are trying to open if applicable");
-            println!("  -p OR --path filepath");
-            println!("      Replace filepath with the full path, name, and extension of the file you are trying to open if applicable");
-            println!("");
-            println!("You can also open a file by simply adding the file name/extension as the first flag. Both this and -n/--name work based off the current working directory, so you can also input a file path from that directory.");
-            println!("------------------------------------------------------------------------");
-            std::process::exit(0);
+    match args.get(1) {
+        Some(_) => {
+            match args[1].as_str() {
+                "-h" | "--help"=> {
+                    show_help();
+                }
+                _ => {
+                    // Pass
+                }
+            }
         }
-        _ => {
-            // Pass
-        }
+        None => show_help(),
     }
     drop(args);
+}
+
+
+fn show_help() {
+    println!("------------------------------------------------------------------------");
+    println!("To open a file in Recoilless Editor, you can use the arguments listed below:");
+    println!("");
+    println!("  -n OR --name filename");
+    println!("      Replace filename with the name and extension of the file you are trying to open if applicable");
+    println!("  -p OR --path filepath");
+    println!("      Replace filepath with the full path, name, and extension of the file you are trying to open if applicable");
+    println!("");
+    println!("You can also open a file by simply adding the file name/extension as the first flag. Both this and -n/--name work based off the current working directory, so you can also input a file path from that directory.");
+    println!("------------------------------------------------------------------------");
+    std::process::exit(0);
 }
 
 // Get cli argument(s) and return the file path
@@ -46,6 +56,7 @@ pub fn get_file_path() -> String {
     }
 }
 
+// Fetches the file's size
 pub fn get_file_size(file_path: &String) -> String {
     let mut file_size = fs::File::open(&file_path).expect("Failed to open file in get_file_size").metadata().expect("Failed to get file metadata in get_file_size").len().to_string();
     file_size.push_str(" Bytes Saved ");
@@ -69,6 +80,7 @@ pub fn save_file(is_modified: &bool, file_path: &String, input_area: &mut TextAr
     }
 }
 
+// Convert to file extension into something more readable
 pub fn convert_extension(mut file_type: &str) -> &str {
     match file_type {
         "txt" => {

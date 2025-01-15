@@ -13,13 +13,13 @@ struct StatusBarStruct<'a> {
     status_text: Text<'a>,
     cursor_line: usize,
     cursor_row: usize,
-    cursor_pos: String,
+    status_content: String,
     cursor_seperator: &'a str,
     seperator: &'a str
 }
 
 fn main() -> Result<()> {
-    misc_handler::help_arg();
+    misc_handler::boot_arg();
     color_eyre::install()?;
     let terminal = ratatui::init();
     let result = run(terminal);
@@ -44,7 +44,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
         status_text: "".into(),
         cursor_line: std::usize::MIN,
         cursor_row: std::usize::MIN,
-        cursor_pos: "".into(),
+        status_content: "".into(),
         cursor_seperator: ":",
         seperator: " | "
     };
@@ -82,12 +82,16 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         editor_mode = "Edit"
                     },
                     input => {
+                        // Add input to input_area
                         input_area.input(input);
+                        // Change is_modified to true, in case a change was made to the input_area
                         is_modified = true;
+                        // Update the status bar
                         status_bar.cursor_line = &input_area.cursor().0 + 1;
                         status_bar.cursor_row = &input_area.cursor().1 + 1;
-                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
-                        status_bar.status_text = Text::from(status_bar.cursor_pos);
+                        status_bar.status_content = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}",
+                            cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+                        status_bar.status_text = Text::from(status_bar.status_content);
                         status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
                             .alignment(layout::Alignment::Left);
                     }
@@ -213,11 +217,12 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         input_area.paste();
                     }
                     _input => {
-                        is_modified = true;
+                        // Update the status bar
                         status_bar.cursor_line = &input_area.cursor().0 + 1;
                         status_bar.cursor_row = &input_area.cursor().1 + 1;
-                        status_bar.cursor_pos = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}", cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
-                        status_bar.status_text = Text::from(status_bar.cursor_pos);
+                        status_bar.status_content = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}",
+                            cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+                        status_bar.status_text = Text::from(status_bar.status_content);
                         status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
                             .alignment(layout::Alignment::Left);
                     }
