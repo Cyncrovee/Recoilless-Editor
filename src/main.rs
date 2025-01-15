@@ -150,22 +150,22 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::WordForward);
                     }
-                    Input { key: Key::Char('w'), alt: true, ctrl: false, ..} => {
+                    Input { key: Key::Char('w'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::WordBack);
                     }
                     // Delete word
-                    Input { key: Key::Char('w'), alt: true, ctrl: true, ..} => {
+                    Input { key: Key::Char('w'), ctrl: true, alt: true, ..} => {
                         input_area.delete_next_word();
                     }
                     // Move around by line
                     Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::Up);
                     }
-                    Input { key: Key::Char('l'), alt: true, ctrl: false, ..} => {
+                    Input { key: Key::Char('l'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Down);
                     }
                     // Delete line
-                    Input { key: Key::Char('l'), alt: true, ctrl: true, ..} => {
+                    Input { key: Key::Char('l'), ctrl: true, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Head);
                         input_area.delete_line_by_end();
                     }
@@ -174,7 +174,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         input_area.move_cursor(CursorMove::End);
                         input_area.insert_newline();
                     },
-                    Input { key: Key::Char('n'), alt: true, ctrl: false, ..} => {
+                    Input { key: Key::Char('n'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Up);
                         input_area.move_cursor(CursorMove::End);
                         input_area.insert_newline();
@@ -183,14 +183,14 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     Input { key: Key::Char('e'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::Head);
                     }
-                    Input { key: Key::Char('e'), alt: true, ctrl: false, ..} => {
+                    Input { key: Key::Char('e'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::End);
                     }
                     // Jump to start/end of file
                     Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::Top);
                     }
-                    Input { key: Key::Char('j'), alt: true, ctrl: false, ..} => {
+                    Input { key: Key::Char('j'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Bottom);
                     }
                     // Undo
