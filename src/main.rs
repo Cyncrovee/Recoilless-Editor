@@ -23,6 +23,8 @@ struct StatusBarStruct<'a> {
 
 fn main() -> Result<()> {
     boot_arg();
+    let test = get_file_path(true);
+    drop(test);
     color_eyre::install()?;
     let terminal = ratatui::init();
     let result = run(terminal);
@@ -35,7 +37,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     let mut is_edit_mode = true;
     let mut editor_mode = "Edit";
     // Get file path, file size and file type
-    let file_path = get_file_path();
+    let file_path = get_file_path(false);
     let mut file_size = file_info_handler::get_file_size(&file_path);
     let mut file_type: &str = Path::new(&file_path).extension().unwrap().to_str().unwrap();
     // Convert file extension if applicable
@@ -65,6 +67,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     // Get contents from file and add them to the input_area
     let file_contents = fs::read_to_string(&file_path);
     input_area.insert_str(file_contents.expect("Failed to unwrap file contents"));
+    
     // Declare a bool that will be true when input_area.input(input); is called (see the input events below)
     // And be false after saving (except when saving and quitting)
     let mut is_modified = false;
