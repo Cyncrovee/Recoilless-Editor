@@ -223,6 +223,8 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         input_area.paste();
                     }
                     _input => {
+                        // Change is_modified to true, in case a change was made to the input_area
+                        is_modified = true;
                         // Update the status bar
                         status_bar.cursor_line = &input_area.cursor().0 + 1;
                         status_bar.cursor_row = &input_area.cursor().1 + 1;
