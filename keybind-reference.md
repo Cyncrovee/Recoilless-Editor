@@ -15,6 +15,8 @@ There are some duplicates (i.e two keybinds that do the same thing), just due to
 - Alt + l: Move backward by line
 - Ctrl + e: Jump to start of line
 - Alt + e: Jump to end of line
+- Ctrl + p: Jump back by paragraph
+- Alt + p: Jump forward by paragraph
 - Ctrl + j: Jump to start of file
 - Alt + j: Jump to end of file
 

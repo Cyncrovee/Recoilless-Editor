@@ -186,6 +186,13 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     Input { key: Key::Char('e'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::End);
                     }
+                    // Jump to start/end of line
+                    Input { key: Key::Char('p'), ctrl: true, alt: false, ..} => {
+                        input_area.move_cursor(CursorMove::ParagraphBack);
+                    }
+                    Input { key: Key::Char('p'), ctrl: false, alt: true, ..} => {
+                        input_area.move_cursor(CursorMove::ParagraphForward);
+                    }
                     // Jump to start/end of file
                     Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::Top);
