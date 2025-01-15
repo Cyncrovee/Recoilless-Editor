@@ -1,11 +1,14 @@
 use std::{fs, path::Path};
 
 use color_eyre::{eyre::Ok, Result};
-use misc_handler::get_file_size;
 use ratatui::{layout::{self, Rect}, style::Style, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
 use tui_textarea::{Input, TextArea, Key, CursorMove};
 
-mod misc_handler;
+mod cli_handler;
+mod file_info_handler;
+
+use cli_handler::{boot_arg, get_file_path};
+use file_info_handler::{get_file_size, save_file, convert_extension};
 
 struct StatusBarStruct<'a> {
     status_area: Rect,
@@ -19,7 +22,7 @@ struct StatusBarStruct<'a> {
 }
 
 fn main() -> Result<()> {
-    misc_handler::boot_arg();
+    boot_arg();
     color_eyre::install()?;
     let terminal = ratatui::init();
     let result = run(terminal);
@@ -32,11 +35,11 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     let mut is_edit_mode = true;
     let mut editor_mode = "Edit";
     // Get file path, file size and file type
-    let file_path = misc_handler::get_file_path();
-    let mut file_size = misc_handler::get_file_size(&file_path);
+    let file_path = get_file_path();
+    let mut file_size = file_info_handler::get_file_size(&file_path);
     let mut file_type: &str = Path::new(&file_path).extension().unwrap().to_str().unwrap();
     // Convert file extension if applicable
-    file_type = misc_handler::convert_extension(file_type);
+    file_type = convert_extension(file_type);
     // Initialise StatusBarStruct
     let mut status_bar = StatusBarStruct {
         status_area: Rect::new(0, 0, 0, 0),
@@ -108,13 +111,13 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     },
                     // Save file
                     Input { key: Key::Char('s'), ctrl: true, alt: false, .. } => {
-                        misc_handler::save_file(&is_modified, &file_path, &mut input_area);
+                        save_file(&is_modified, &file_path, &mut input_area);
                         file_size = get_file_size(&file_path);
                         is_modified = false;
                     },
                     // Save file and exit
                     Input { key: Key::Char('s'), ctrl: true, alt: true, .. } => {
-                        misc_handler::save_file(&is_modified, &file_path, &mut input_area);
+                        save_file(&is_modified, &file_path, &mut input_area);
                         break Ok(());
                     },
                     // General movement (hjkl, arrow keys)
