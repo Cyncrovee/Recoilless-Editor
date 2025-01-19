@@ -23,7 +23,7 @@ struct StatusBarStruct<'a> {
 
 fn main() -> Result<()> {
     boot_arg();
-    let test = get_file_path(true);
+    let test = get_file_path();
     drop(test);
     color_eyre::install()?;
     let terminal = ratatui::init();
@@ -37,7 +37,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     let mut is_edit_mode = true;
     let mut editor_mode = "Edit";
     // Get file path, file size and file type
-    let file_path = get_file_path(false);
+    let file_path = get_file_path();
     let mut file_size = file_info_handler::get_file_size(&file_path);
     let mut file_type: &str = Path::new(&file_path).extension().unwrap().to_str().unwrap();
     // Convert file extension if applicable

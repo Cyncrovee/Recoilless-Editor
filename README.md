@@ -12,7 +12,6 @@ When resizing the window with the program open, it may flicker! Be careful when 
 cargo run -- "file-path"
 ```
 Replace "file-path" with the path to the file to edit. Speech marks should only be needed if the file path contains one or more spaces.
-If no arguments (or the -n OR --name args) are provided, it will look for the file from the current working directory. Alternatively, you can pass the -p OR --path args to give the full path to the file.
 Use the -h OR --help args for more help.
 
 ## Features:
