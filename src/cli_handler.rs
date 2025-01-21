@@ -48,6 +48,10 @@ fn show_help() {
 	println!("");
 	println!("When running with cargo, you can add arguments like this:");
 	println!("cargo run -- example_arg");
+	println!("");
+	println!("To exit the program without saving, simply press the 'end' key, possibly near the page down/home/del keys");
+	println!("To exit the program with saving, press the Ctrl + Alt + s keys");
+	println!("For more keybinds, refer to the keybind reference file or run the program with -k or --keys as the first argument");
     println!("------------------------------------------------------------------------");
     std::process::exit(0);
 }
