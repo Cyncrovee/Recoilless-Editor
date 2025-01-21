@@ -92,14 +92,6 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         input_area.input(input);
                         // Change is_modified to true, in case a change was made to the input_area
                         is_modified = true;
-                        // Update the status bar
-                        status_bar.cursor_line = &input_area.cursor().0 + 1;
-                        status_bar.cursor_row = &input_area.cursor().1 + 1;
-                        status_bar.status_content = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}",
-                            cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
-                        status_bar.status_text = Text::from(status_bar.status_content);
-                        status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
-                            .alignment(layout::Alignment::Left);
                     }
                 }
             }
@@ -225,17 +217,17 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                     _input => {
                         // Change is_modified to true, in case a change was made to the input_area
                         is_modified = true;
-                        // Update the status bar
-                        status_bar.cursor_line = &input_area.cursor().0 + 1;
-                        status_bar.cursor_row = &input_area.cursor().1 + 1;
-                        status_bar.status_content = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}",
-                            cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
-                        status_bar.status_text = Text::from(status_bar.status_content);
-                        status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
-                            .alignment(layout::Alignment::Left);
                     }
                 }
             }
         }
+        // Update the status bar
+        status_bar.cursor_line = &input_area.cursor().0 + 1;
+        status_bar.cursor_row = &input_area.cursor().1 + 1;
+        status_bar.status_content = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}",
+            cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+        status_bar.status_text = Text::from(status_bar.status_content);
+        status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
+            .alignment(layout::Alignment::Left);
     }
 }
