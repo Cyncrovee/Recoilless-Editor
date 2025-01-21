@@ -30,6 +30,6 @@ There are some duplicates (i.e two keybinds that do the same thing), just due to
 - p: Paste
 
 ## Editor (Edit Mode)
-- Ctrl + home: Exit program
+- End: Exit program
 - Ctrl + s: Save file
 - Ctrl + Alt + s: Save file and exit program

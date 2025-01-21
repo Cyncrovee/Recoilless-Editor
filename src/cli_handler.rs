@@ -86,7 +86,7 @@ fn show_keybinds() {
     println!("- p: Paste");
     println!("");
     println!("Editor (Edit Mode)");
-    println!("- Ctrl + home: Exit program");
+    println!("- End: Exit program");
     println!("- Ctrl + s: Save file");
     println!("- Ctrl + Alt + s: Save file and exit program");
     println!("");

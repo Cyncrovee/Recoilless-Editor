@@ -98,7 +98,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
             true => {
                 match crossterm::event::read()?.into() {
                     // Exit program
-                    Input { key: Key::Home, ctrl: true, .. } => break Ok(()),
+                    Input { key: Key::End, .. } => break Ok(()),
                     // Go to insert mode
                     Input { key: Key::Char('i'), .. } => {
                         is_edit_mode = false;
