@@ -49,7 +49,7 @@ fn show_help() {
 	println!("When running with cargo, you can add arguments like this:");
 	println!("cargo run -- example_arg");
 	println!("");
-	println!("To exit the program without saving, simply press the 'end' key, possibly near the page down/home/del keys");
+	println!("To exit the program without saving, press the 'end' key or Ctrl + Alt + Backspace, possibly near the page down/home/del keys");
 	println!("To exit the program with saving, press the Ctrl + Alt + s keys");
 	println!("For more keybinds, refer to the keybind reference file or run the program with -k or --keys as the first argument");
     println!("------------------------------------------------------------------------");
@@ -90,7 +90,8 @@ fn show_keybinds() {
     println!("- p: Paste");
     println!("");
     println!("Editor (Edit Mode)");
-    println!("- End: Exit program");
+    println!("End: Exit program");
+    println!("Ctrl + Alt + Backspace: Exit program");
     println!("- Ctrl + s: Save file");
     println!("- Ctrl + Alt + s: Save file and exit program");
     println!("");

@@ -31,5 +31,6 @@ There are some duplicates (i.e two keybinds that do the same thing), just due to
 
 ## Editor (Edit Mode)
 - End: Exit program
+- Ctrl+ Alt + Backspace: Exit program
 - Ctrl + s: Save file
 - Ctrl + Alt + s: Save file and exit program

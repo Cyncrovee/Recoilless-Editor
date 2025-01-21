@@ -87,6 +87,9 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         is_edit_mode = true;
                         editor_mode = "Edit"
                     },
+                    Input { key: Key::Char('a'), ctrl: true, .. } => {
+                        input_area.select_all();
+                    },
                     input => {
                         // Add input to input_area
                         input_area.input(input);
@@ -99,6 +102,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 match crossterm::event::read()?.into() {
                     // Exit program
                     Input { key: Key::End, .. } => break Ok(()),
+                    Input { key: Key::Backspace, ctrl: true, alt: true, .. } => break Ok(()),
                     // Go to insert mode
                     Input { key: Key::Char('i'), .. } => {
                         is_edit_mode = false;
