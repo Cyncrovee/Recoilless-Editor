@@ -13,6 +13,11 @@ cargo run -- "file-path"
 ```
 Replace "file-path" with the path to the file to edit. Speech marks should only be needed if the file path contains one or more spaces.
 Use the -h OR --help args for more help.
+### Modes
+Recoiless has two modes, Overview mode and Insert mode 
+When in overview mode (Ovr), press 'i' to enter insert mode
+When in insert mode (Ins), press 'esc' to enter Overview mode
+Refer to the keybind-reference.md file for mode information
 
 ## Features:
 - A status bar showing some basic information about the editor/file

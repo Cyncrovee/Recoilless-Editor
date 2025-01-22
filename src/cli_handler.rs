@@ -89,8 +89,8 @@ fn show_keybinds() {
     println!("- r: Redo");
     println!("- p: Paste");
     println!("");
-    println!("Editor (Edit Mode)");
-    println!("End: Exit program");
+    println!("- Editor (Edit Mode)");
+    println!("- End: Exit program");
     println!("Ctrl + Alt + Backspace: Exit program");
     println!("- Ctrl + s: Save file");
     println!("- Ctrl + Alt + s: Save file and exit program");

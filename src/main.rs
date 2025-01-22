@@ -35,7 +35,7 @@ fn main() -> Result<()> {
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
     // Set editor mode variables
     let mut is_edit_mode = true;
-    let mut editor_mode = "Edit";
+    let mut editor_mode = "Ovr";
     // Get file path, file size and file type
     let file_path = get_file_path();
     let mut file_size = file_info_handler::get_file_size(&file_path);
@@ -85,7 +85,7 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                 match crossterm::event::read()?.into() {
                     Input { key: Key::Esc, .. } => {
                         is_edit_mode = true;
-                        editor_mode = "Edit"
+                        editor_mode = "Ovr"
                     },
                     Input { key: Key::Char('a'), ctrl: true, .. } => {
                         input_area.select_all();
