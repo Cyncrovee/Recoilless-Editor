@@ -152,6 +152,10 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
                         input_area.cancel_selection();
                         input_area.move_cursor(CursorMove::Forward);
                     },
+                    // Delete char
+                    Input { key: Key::Char('c'), ctrl: true, alt: true, ..} => {
+                        input_area.delete_next_char();
+                    }
                     // Move around by word
                     Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::WordForward);

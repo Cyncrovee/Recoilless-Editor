@@ -51,6 +51,7 @@ fn show_help() {
 	println!("");
 	println!("To exit the program without saving, press the 'end' key or Ctrl + Alt + Backspace, possibly near the page down/home/del keys");
 	println!("To exit the program with saving, press the Ctrl + Alt + s keys");
+    println!("");
 	println!("For more keybinds, refer to the keybind reference file or run the program with -k or --keys as the first argument");
     println!("------------------------------------------------------------------------");
     std::process::exit(0);
@@ -61,13 +62,13 @@ fn show_keybinds() {
     println!("------------------------------------------------------------------------");
     println!("");
     println!("Below is an overview of some of the keybinds for the editor (not all are included here, but this should cover most of the commonly used ones).");
-    println!("There are some duplicates (i.e two keybinds that do the same thing), just due to the built-in keybinds in tui-textarea that I'm not sure if I want to remove. However the differences between edit mode and insert mode should make this less of a problem.");
+    println!("There are some duplicates (i.e two keybinds that do the same thing), just due to the built-in keybinds in tui-textarea that I'm not sure if I want to remove. However the differences between overview mode and insert mode should make this less of a problem.");
     println!("");
     println!("Modes:");
-    println!("- i: Switch to insert mode (when in edit mode)");
-    println!("- Esc: Switch to edit mode (when in insert mode)");
+    println!("- i: Switch to insert mode (when in overview mode)");
+    println!("- Esc: Switch to overview mode (when in insert mode)");
     println!("");
-    println!("Movement (Edit Mode)");
+    println!("Movement (Overview Mode)");
     println!("- hjkl/arrow keys: Move left, down, up and right");
     println!("- Ctrl + w: Move forward by word");
     println!("- Alt + w: Move backward by word");
@@ -80,7 +81,7 @@ fn show_keybinds() {
     println!("- Ctrl + j: Jump to start of file");
     println!("- Alt + j: Jump to end of file");
     println!("");
-    println!("Editing (Edit Mode)");
+    println!("Editing (Overview Mode)");
     println!("- Ctrl + Alt + w: Delete word");
     println!("- Ctrl + Alt + l: Delete line");
     println!("- Ctrl + n :Make a new line below current line");
@@ -89,9 +90,9 @@ fn show_keybinds() {
     println!("- r: Redo");
     println!("- p: Paste");
     println!("");
-    println!("- Editor (Edit Mode)");
+    println!("- Editor (Overview Mode)");
     println!("- End: Exit program");
-    println!("Ctrl + Alt + Backspace: Exit program");
+    println!("- Ctrl + Alt + Backspace: Exit program");
     println!("- Ctrl + s: Save file");
     println!("- Ctrl + Alt + s: Save file and exit program");
     println!("");

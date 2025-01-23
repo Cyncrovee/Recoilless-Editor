@@ -21,6 +21,7 @@ There are some duplicates (i.e two keybinds that do the same thing), just due to
 - Alt + j: Jump to end of file
 
 ## Editing (Overview Mode)
+- Ctrl + Alt + c: Delete character
 - Ctrl + Alt + w: Delete word
 - Ctrl + Alt + l: Delete line
 - Ctrl + n :Make a new line below current line
