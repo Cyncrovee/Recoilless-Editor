@@ -3,7 +3,7 @@ use std::{fs, path::Path};
 
 // Import from crates
 use color_eyre::{eyre::Ok, Result};
-use ratatui::{layout::{self, Rect}, style::Modifier, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
+use ratatui::{layout::{self, Rect}, style::{Modifier, Style}, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
 use tui_textarea::{Input, TextArea, Key, CursorMove};
 
 // Mod external files
