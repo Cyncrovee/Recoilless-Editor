@@ -1,15 +1,20 @@
+// Import from standard
 use std::{fs, path::Path};
 
+// Import from crates
 use color_eyre::{eyre::Ok, Result};
-use ratatui::{layout::{self, Rect}, style::Style, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
+use ratatui::{layout::{self, Rect}, style::Modifier, text::Text, widgets::{self, Block, Borders, Paragraph}, DefaultTerminal};
 use tui_textarea::{Input, TextArea, Key, CursorMove};
 
+// Mod external files
 mod cli_handler;
 mod file_handler;
 
+// Get functions from external files
 use cli_handler::{boot_arg, get_file_path};
 use file_handler::{get_file_size, save_file, parse_config, convert_extension};
 
+// Setup the struct which will be used for the status bar
 struct StatusBarStruct<'a> {
     status_area: Rect,
     status_paragraph: Paragraph<'a>,
@@ -32,9 +37,12 @@ fn setup(input_area: TextArea, status_bar: StatusBarStruct, is_edit_mode: bool, 
     result
 }
 
+// This function sets all the variables, widgets and styling that will be used by the run() function
 fn main() {
+    // Setup config parser
     let config = parse_config();
     let mut linenumber = "empty".to_string();
+    // Get linenumber from config if applicable
     match config.get("main", "linenumber") {
         Some(_) => {
             linenumber = config.get("main", "linenumber").unwrap();
@@ -90,6 +98,7 @@ fn main() {
     // And be false after saving (except when saving and quitting)
     let is_modified = false;
 
+    // Continue to setup()
     let _ = setup(input_area, status_bar, is_edit_mode, editor_mode, is_modified, file_path.clone(), file_size, file_type);
 }
 
@@ -107,7 +116,9 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                 match crossterm::event::read()?.into() {
                     Input { key: Key::Esc, .. } => {
                         is_edit_mode = true;
-                        editor_mode = "Ovr"
+                        editor_mode = "Ovr";
+                        input_area.set_cursor_style(Style::default().bg(ratatui::style::Color::Reset));
+                        input_area.set_cursor_style(Style::default().fg(ratatui::style::Color::Reset).add_modifier(Modifier::REVERSED));
                     },
                     Input { key: Key::Char('a'), ctrl: true, .. } => {
                         input_area.select_all();
@@ -129,6 +140,8 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     Input { key: Key::Char('i'), .. } => {
                         is_edit_mode = false;
                         editor_mode = "Ins";
+                        input_area.set_cursor_style(Style::default().bg(ratatui::style::Color::LightCyan));
+                        input_area.set_cursor_style(Style::default().fg(ratatui::style::Color::LightCyan).add_modifier(Modifier::REVERSED));
                     },
                     // Save file
                     Input { key: Key::Char('s'), ctrl: true, alt: false, .. } => {

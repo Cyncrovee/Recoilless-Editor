@@ -17,7 +17,10 @@ Use the -h OR --help args for more help.
 Recoiless has two modes, Overview mode and Insert mode 
 When in overview mode (Ovr), press 'i' to enter insert mode
 When in insert mode (Ins), press 'esc' to enter Overview mode
-Refer to the keybind-reference.md file for mode information
+Refer to the keybind-reference.md file for more information
+
+## Configuration:
+Refer to the docs/configuration.md file
 
 ## Features:
 - A status bar showing some basic information about the editor/file
