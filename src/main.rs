@@ -55,7 +55,7 @@ fn main() {
     // Get hardtab from config if applicable
     match config.get("main", "hardtab") {
         Some(_) => {
-            hardtab = config.get("main", "linenumber").unwrap();
+            hardtab = config.get("main", "hardtab").unwrap();
         }
         None => {
             //
