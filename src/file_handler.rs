@@ -1,5 +1,7 @@
-use std::{fs, io::{self, Write}};
+use std::{fs, io::{self, Write}, path::Path};
 use tui_textarea::TextArea;
+use configparser::ini::Ini;
+use dirs::home_dir;
 
 // Fetches the file's size
 pub fn get_file_size(file_path: &String) -> String {
@@ -25,6 +27,24 @@ pub fn save_file(is_modified: &bool, file_path: &String, input_area: &mut TextAr
     }
 }
 
+pub fn parse_config() -> Ini {
+    let lesser_config_path = "\\.config\\recoilless\\rcl_config.txt";
+    let mut config_path = home_dir().unwrap().into_os_string();
+    // Join (lesser_)config_path into one var
+    config_path.push(&lesser_config_path);
+    match fs::exists(Path::new(&config_path)).unwrap() {
+        true => {
+            // pass
+        }
+        false => {
+            // pass
+        }
+    }
+    let mut config_main = Ini::new();
+    let _config = config_main.load(&config_path);
+    return config_main;
+}
+
 // Convert to file extension into something more readable
 pub fn convert_extension(mut file_type: &str) -> &str {
     match file_type {
@@ -34,6 +54,10 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }
         "md" => {
             file_type = "Markdown File";
+            return file_type;
+        }
+        "cfg" => {
+            file_type = "CFG File";
             return file_type;
         }
         "XML" => {

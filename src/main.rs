@@ -5,10 +5,10 @@ use ratatui::{layout::{self, Rect}, style::Style, text::Text, widgets::{self, Bl
 use tui_textarea::{Input, TextArea, Key, CursorMove};
 
 mod cli_handler;
-mod file_info_handler;
+mod file_handler;
 
 use cli_handler::{boot_arg, get_file_path};
-use file_info_handler::{get_file_size, save_file, convert_extension};
+use file_handler::{get_file_size, save_file, parse_config, convert_extension};
 
 struct StatusBarStruct<'a> {
     status_area: Rect,
@@ -33,12 +33,23 @@ fn main() -> Result<()> {
 }
 
 fn run(mut terminal: DefaultTerminal) -> Result<()> {
+    let config = parse_config();
+    let mut linenumber = "empty".to_string();
+    match config.get("main", "linenumber") {
+        Some(_) => {
+            linenumber = config.get("main", "linenumber").unwrap();
+        }
+        None => {
+            //
+        }
+    };
+
     // Set editor mode variables
     let mut is_edit_mode = true;
     let mut editor_mode = "Ovr";
     // Get file path, file size and file type
     let file_path = get_file_path();
-    let mut file_size = file_info_handler::get_file_size(&file_path);
+    let mut file_size = file_handler::get_file_size(&file_path);
     let mut file_type: &str = Path::new(&file_path).extension().unwrap().to_str().unwrap();
     // Convert file extension if applicable
     file_type = convert_extension(file_type);
@@ -56,7 +67,14 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
 
     // Declare input_area and it's block/styling
     let mut input_area: TextArea = TextArea::default();
-    input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
+    match linenumber.as_str() {
+        "false" => {
+            // Pass
+        }
+        &_ => {
+            input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
+        }
+    }
     input_area.set_block(
         Block::default()
             .title(file_path.clone())
