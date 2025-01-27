@@ -11,9 +11,9 @@ On Windows this is:
 C:\Users\username\.config\recoilless\rcl_config.txt
 ```
 
-You may need to create the '.config' and 'recoilless' directories if they do not already exist.
+You may need to create the '.config' and 'recoilless' directories if they do not already exist, and the configuration file.
 
-The configuration file itself work silimarly to TOML (however keep in mind it is not actually TOML).
+The configuration file itself work similarly to TOML (however keep in mind it is not actually TOML).
 Everything should be listed under the [main] section.
 For example:
 ```

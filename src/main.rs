@@ -21,18 +21,18 @@ struct StatusBarStruct<'a> {
     seperator: &'a str
 }
 
-fn main() -> Result<()> {
+fn setup(input_area: TextArea, status_bar: StatusBarStruct, is_edit_mode: bool, editor_mode: &str, is_modified: bool, file_path: String, file_size: String, file_type: &str) -> Result<()> {
     boot_arg();
     let test = get_file_path();
     drop(test);
     color_eyre::install()?;
     let terminal = ratatui::init();
-    let result = run(terminal);
+    let result = run(terminal, input_area, status_bar, is_edit_mode, editor_mode, is_modified, file_path, file_size, file_type);
     ratatui::restore();
     result
 }
 
-fn run(mut terminal: DefaultTerminal) -> Result<()> {
+fn main() {
     let config = parse_config();
     let mut linenumber = "empty".to_string();
     match config.get("main", "linenumber") {
@@ -45,16 +45,16 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     };
 
     // Set editor mode variables
-    let mut is_edit_mode = true;
-    let mut editor_mode = "Ovr";
+    let is_edit_mode = true;
+    let editor_mode = "Ovr";
     // Get file path, file size and file type
     let file_path = get_file_path();
-    let mut file_size = file_handler::get_file_size(&file_path);
+    let file_size = file_handler::get_file_size(&file_path);
     let mut file_type: &str = Path::new(&file_path).extension().unwrap().to_str().unwrap();
     // Convert file extension if applicable
     file_type = convert_extension(file_type);
     // Initialise StatusBarStruct
-    let mut status_bar = StatusBarStruct {
+    let status_bar = StatusBarStruct {
         status_area: Rect::new(0, 0, 0, 0),
         status_paragraph: widgets::Paragraph::new("").alignment(ratatui::layout::Alignment::Left),
         status_text: "".into(),
@@ -88,8 +88,12 @@ fn run(mut terminal: DefaultTerminal) -> Result<()> {
     
     // Declare a bool that will be true when input_area.input(input); is called (see the input events below)
     // And be false after saving (except when saving and quitting)
-    let mut is_modified = false;
+    let is_modified = false;
 
+    let _ = setup(input_area, status_bar, is_edit_mode, editor_mode, is_modified, file_path.clone(), file_size, file_type);
+}
+
+fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: StatusBarStruct, mut is_edit_mode: bool, mut editor_mode: &str, mut is_modified: bool, file_path: String, mut file_size: String, file_type: &str) -> Result<()> {
     // Main loop to draw widgets and handle key inputs
     loop {
         terminal.draw(|frame| {

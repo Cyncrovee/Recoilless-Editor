@@ -1,4 +1,4 @@
-use std::{fs, io::{self, Write}, path::Path};
+use std::{fs, io::{self, Write}};
 use tui_textarea::TextArea;
 use configparser::ini::Ini;
 use dirs::home_dir;
@@ -32,14 +32,6 @@ pub fn parse_config() -> Ini {
     let mut config_path = home_dir().unwrap().into_os_string();
     // Join (lesser_)config_path into one var
     config_path.push(&lesser_config_path);
-    match fs::exists(Path::new(&config_path)).unwrap() {
-        true => {
-            // pass
-        }
-        false => {
-            // pass
-        }
-    }
     let mut config_main = Ini::new();
     let _config = config_main.load(&config_path);
     return config_main;
