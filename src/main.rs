@@ -42,10 +42,20 @@ fn main() {
     // Setup config parser
     let config = parse_config();
     let mut linenumber = "empty".to_string();
+    let mut hardtab= "empty".to_string();
     // Get linenumber from config if applicable
     match config.get("main", "linenumber") {
         Some(_) => {
             linenumber = config.get("main", "linenumber").unwrap();
+        }
+        None => {
+            //
+        }
+    };
+    // Get hardtab from config if applicable
+    match config.get("main", "hardtab") {
+        Some(_) => {
+            hardtab = config.get("main", "linenumber").unwrap();
         }
         None => {
             //
@@ -75,6 +85,14 @@ fn main() {
 
     // Declare input_area and it's block/styling
     let mut input_area: TextArea = TextArea::default();
+    match hardtab.as_str() {
+        "true" => {
+            input_area.set_hard_tab_indent(true);
+        }
+        &_ => {
+            // Pass
+        }
+    }
     match linenumber.as_str() {
         "false" => {
             // Pass

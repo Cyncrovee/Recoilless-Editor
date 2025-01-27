@@ -24,6 +24,7 @@ This will disable the line numbers in the editor (which are enabled by default)
 
 Below are all the currently avaiable options for configuration:
 
-| Option     | Values                 |
-| ---------- | ---------------------- |
-| linenumber | false (default: true)  |
+| Option     | Function                                                      | Value(s)               |
+| ---------- | ------------------------------------------------------------- | ---------------------- |
+| linenumber | Sets whether or not line numbers are visible                  | false (default: true)  |
+| hardtab    | Sets whether or not tab characters are used for indentation   | true  (default: false) |
