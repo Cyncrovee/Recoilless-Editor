@@ -60,6 +60,14 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             file_type = "TOML File";
             return file_type;
         }
+        "ini" => {
+            file_type = "INI Configuration File";
+            return file_type;
+        }
+        "csv" => {
+            file_type = "Comma Seperated Values File";
+            return file_type;
+        }
         // Commented out due to confusion over c/c++ file extensions
         /*"c" => {
             file_type = "C Source File";
@@ -67,6 +75,14 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }*/
         "sh" => {
             file_type = "Shell Script";
+            return file_type;
+        }
+        "ps1" => {
+            file_type = "Powershell Script";
+            return file_type;
+        }
+        "bat" => {
+            file_type = "Batch File";
             return file_type;
         }
         "gd" => {
@@ -127,6 +143,14 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }
         "ts" => {
             file_type = "TypeScript Source File";
+            return file_type;
+        }
+        "html" => {
+            file_type = "HTML File";
+            return file_type;
+        }
+        "CSS" => {
+            file_type = "CSS File";
             return file_type;
         }
         &_ => {
