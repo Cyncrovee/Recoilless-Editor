@@ -27,9 +27,6 @@ struct StatusBarStruct<'a> {
 }
 
 fn setup(input_area: TextArea, status_bar: StatusBarStruct, is_edit_mode: bool, editor_mode: &str, is_modified: bool, file_path: String, file_size: String, file_type: &str) -> Result<()> {
-    boot_arg();
-    let test = get_file_path();
-    drop(test);
     color_eyre::install()?;
     let terminal = ratatui::init();
     let result = run(terminal, input_area, status_bar, is_edit_mode, editor_mode, is_modified, file_path, file_size, file_type);
@@ -39,6 +36,9 @@ fn setup(input_area: TextArea, status_bar: StatusBarStruct, is_edit_mode: bool, 
 
 // This function sets all the variables, widgets and styling that will be used by the run() function
 fn main() {
+    boot_arg();
+    let test = get_file_path();
+    drop(test);
     // Setup config parser
     let config = parse_config();
     let mut linenumber = "empty".to_string();
