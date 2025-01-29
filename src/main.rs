@@ -9,10 +9,12 @@ use tui_textarea::{Input, TextArea, Key, CursorMove};
 // Mod external files
 mod cli_handler;
 mod file_handler;
+mod config_handler;
 
 // Get functions from external files
 use cli_handler::{boot_arg, get_file_path};
-use file_handler::{get_file_size, save_file, parse_config, convert_extension};
+use file_handler::{get_file_size, save_file, convert_extension};
+use config_handler::run_config;
 
 // Setup the struct which will be used for the status bar
 struct StatusBarStruct<'a> {
@@ -39,28 +41,6 @@ fn main() {
     boot_arg();
     let test = get_file_path();
     drop(test);
-    // Setup config parser
-    let config = parse_config();
-    let mut linenumber = "empty".to_string();
-    let mut hardtab= "empty".to_string();
-    // Get linenumber from config if applicable
-    match config.get("main", "linenumber") {
-        Some(_) => {
-            linenumber = config.get("main", "linenumber").unwrap();
-        }
-        None => {
-            //
-        }
-    };
-    // Get hardtab from config if applicable
-    match config.get("main", "hardtab") {
-        Some(_) => {
-            hardtab = config.get("main", "hardtab").unwrap();
-        }
-        None => {
-            //
-        }
-    };
 
     // Set editor mode variables
     let is_edit_mode = true;
@@ -85,22 +65,7 @@ fn main() {
 
     // Declare input_area and it's block/styling
     let mut input_area: TextArea = TextArea::default();
-    match hardtab.as_str() {
-        "true" => {
-            input_area.set_hard_tab_indent(true);
-        }
-        &_ => {
-            // Pass
-        }
-    }
-    match linenumber.as_str() {
-        "false" => {
-            // Pass
-        }
-        &_ => {
-            input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
-        }
-    }
+    run_config(&mut input_area);
     input_area.set_block(
         Block::default()
             .title(file_path.clone())
