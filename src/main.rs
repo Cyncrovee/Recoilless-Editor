@@ -212,15 +212,15 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     }
                     // Make a newline
                     Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
-                        input_area.move_cursor(CursorMove::End);
-                        input_area.insert_newline();
-                        status_bar.last_command = "| NEW-LINE-DOWN";
-                    },
-                    Input { key: Key::Char('n'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Up);
                         input_area.move_cursor(CursorMove::End);
                         input_area.insert_newline();
                         status_bar.last_command = "| NEW-LINE-UP";
+                    },
+                    Input { key: Key::Char('n'), ctrl: false, alt: true, ..} => {
+                        input_area.move_cursor(CursorMove::End);
+                        input_area.insert_newline();
+                        status_bar.last_command = "| NEW-LINE-DOWN";
                     }
                     // Jump to start/end of line
                     Input { key: Key::Char('e'), ctrl: true, alt: false, ..} => {

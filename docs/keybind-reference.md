@@ -24,8 +24,8 @@ There are some duplicates (i.e two keybinds that do the same thing), just due to
 - Ctrl + Alt + c: Delete character
 - Ctrl + Alt + w: Delete word
 - Ctrl + Alt + l: Delete line
-- Ctrl + n :Make a new line below current line
-- Alt + n :Make a new line above current line
+- Ctrl + n :Make a new line above current line
+- Alt + n :Make a new line below current line
 - u: Undo
 - r: Redo
 - p: Paste
