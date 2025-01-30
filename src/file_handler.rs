@@ -69,10 +69,14 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             return file_type;
         }
         // Commented out due to confusion over c/c++ file extensions
-        /*"c" => {
-            file_type = "C Source File";
+        "c" => {
+            file_type = "C/C++ Source File";
             return file_type;
-        }*/
+        }
+        "cpp" => {
+            file_type = "C++ Source File";
+            return file_type;
+        }
         "sh" => {
             file_type = "Shell Script";
             return file_type;
@@ -125,8 +129,16 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             file_type = "Haxe Source File";
             return file_type;
         }
+        "swift" => {
+            file_type = "Swift Souce File";
+            return file_type;
+        }
         "dart" => {
             file_type = "Dart Source File";
+            return file_type;
+        }
+        "pl" => {
+            file_type = "Perl Source File";
             return file_type;
         }
         "rb" => {
