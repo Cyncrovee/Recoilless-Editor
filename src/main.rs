@@ -23,6 +23,7 @@ struct StatusBarStruct<'a> {
     status_text: Text<'a>,
     cursor_line: usize,
     cursor_row: usize,
+    last_command: &'a str,
     status_content: String,
     cursor_seperator: &'a str,
     seperator: &'a str
@@ -58,6 +59,7 @@ fn main() {
         status_text: "".into(),
         cursor_line: std::usize::MIN,
         cursor_row: std::usize::MIN,
+        last_command: "",
         status_content: "".into(),
         cursor_seperator: ":",
         seperator: " | "
@@ -141,18 +143,22 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     Input { key: Key::Char('h'), .. } => {
                         input_area.cancel_selection();
                         input_area.move_cursor(CursorMove::Back);
+                        status_bar.last_command = "| h";
                     },
                     Input { key: Key::Char('j'), ctrl: false, alt: false, .. } => {
                         input_area.cancel_selection();
                         input_area.move_cursor(CursorMove::Down);
+                        status_bar.last_command = "| j";
                     },
                     Input { key: Key::Char('k'), .. } => {
                         input_area.cancel_selection();
                         input_area.move_cursor(CursorMove::Up);
+                        status_bar.last_command = "| k";
                     },
                     Input { key: Key::Char('l'), ctrl: false, alt: false, .. } => {
                         input_area.cancel_selection();
                         input_area.move_cursor(CursorMove::Forward);
+                        status_bar.last_command = "| l";
                     },
                     Input { key: Key::Left, .. } => {
                         input_area.cancel_selection();
@@ -173,72 +179,90 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     // Delete char
                     Input { key: Key::Char('c'), ctrl: true, alt: true, ..} => {
                         input_area.delete_next_char();
+                        status_bar.last_command = "| DEL-CHAR";
                     }
                     // Move around by word
                     Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::WordForward);
+                        status_bar.last_command = "| WORD-FOR";
                     }
                     Input { key: Key::Char('w'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::WordBack);
+                        status_bar.last_command = "| WORD-BACK";
                     }
                     // Delete word
                     Input { key: Key::Char('w'), ctrl: true, alt: true, ..} => {
                         input_area.delete_next_word();
+                        status_bar.last_command = "| DEL-WORD";
                     }
                     // Move around by line
                     Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::Up);
+                        status_bar.last_command = "| LINE-BACK";
                     }
                     Input { key: Key::Char('l'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Down);
+                        status_bar.last_command = "| LINE-FOR";
                     }
                     // Delete line
                     Input { key: Key::Char('l'), ctrl: true, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Head);
                         input_area.delete_line_by_end();
+                        status_bar.last_command = "| DEL-LINE";
                     }
                     // Make a newline
                     Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::End);
                         input_area.insert_newline();
+                        status_bar.last_command = "| NEW-LINE-DOWN";
                     },
                     Input { key: Key::Char('n'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Up);
                         input_area.move_cursor(CursorMove::End);
                         input_area.insert_newline();
+                        status_bar.last_command = "| NEW-LINE-UP";
                     }
                     // Jump to start/end of line
                     Input { key: Key::Char('e'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::Head);
+                        status_bar.last_command = "| JUMP-LINE-START";
                     }
                     Input { key: Key::Char('e'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::End);
+                        status_bar.last_command = "| JUMP-LINE-END";
                     }
                     // Jump to start/end of paragraph
                     Input { key: Key::Char('p'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::ParagraphForward);
+                        status_bar.last_command = "| JUMP-PAR-FOR";
                     }
                     Input { key: Key::Char('p'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::ParagraphBack);
+                        status_bar.last_command = "| JUMP-PAR-BACK";
                     }
                     // Jump to start/end of file
                     Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
                         input_area.move_cursor(CursorMove::Top);
+                        status_bar.last_command = "| JUMP-FILE-START";
                     }
                     Input { key: Key::Char('j'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Bottom);
+                        status_bar.last_command = "| JUMP-FILE-END";
                     }
                     // Undo
                     Input { key: Key::Char('u'), ..} => {
                         input_area.undo();
+                        status_bar.last_command = "| UNDO";
                     }
                     // Redo
                     Input { key: Key::Char('r'), ..} => {
                         input_area.redo();
+                        status_bar.last_command = "| REDO";
                     }
                     // Paste
                     Input { key: Key::Char('p'), ..} => {
                         input_area.paste();
+                        status_bar.last_command = "| PASTE";
                     }
                     _input => {
                         // Change is_modified to true, in case a change was made to the input_area
@@ -250,8 +274,8 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
         // Update the status bar
         status_bar.cursor_line = &input_area.cursor().0 + 1;
         status_bar.cursor_row = &input_area.cursor().1 + 1;
-        status_bar.status_content = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}",
-            cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
+        status_bar.status_content = format!("{cursor_line}{cursor_seperator}{cursor_row}{seperator}{editor_mode}{seperator}{file_type}{seperator}{file_size}{last_command}",
+            cursor_line = &status_bar.cursor_line, cursor_row = &status_bar.cursor_row, last_command = &status_bar.last_command, cursor_seperator = &status_bar.cursor_seperator, seperator = &status_bar.seperator);
         status_bar.status_text = Text::from(status_bar.status_content);
         status_bar.status_paragraph = widgets::Paragraph::new(status_bar.status_text)
             .alignment(layout::Alignment::Left);
