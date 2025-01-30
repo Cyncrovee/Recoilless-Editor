@@ -187,10 +187,10 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     }
                     // Move around by line
                     Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
-                        input_area.move_cursor(CursorMove::Down);
+                        input_area.move_cursor(CursorMove::Up);
                     }
                     Input { key: Key::Char('l'), ctrl: false, alt: true, ..} => {
-                        input_area.move_cursor(CursorMove::Up);
+                        input_area.move_cursor(CursorMove::Down);
                     }
                     // Delete line
                     Input { key: Key::Char('l'), ctrl: true, alt: true, ..} => {
@@ -214,12 +214,12 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     Input { key: Key::Char('e'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::End);
                     }
-                    // Jump to start/end of line
+                    // Jump to start/end of paragraph
                     Input { key: Key::Char('p'), ctrl: true, alt: false, ..} => {
-                        input_area.move_cursor(CursorMove::ParagraphBack);
+                        input_area.move_cursor(CursorMove::ParagraphForward);
                     }
                     Input { key: Key::Char('p'), ctrl: false, alt: true, ..} => {
-                        input_area.move_cursor(CursorMove::ParagraphForward);
+                        input_area.move_cursor(CursorMove::ParagraphBack);
                     }
                     // Jump to start/end of file
                     Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
