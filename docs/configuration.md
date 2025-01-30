@@ -31,4 +31,5 @@ Below are all the currently avaiable options for configuration:
 | Option     | Function                                                      | Value(s)               |
 | ---------- | ------------------------------------------------------------- | ---------------------- |
 | linenumber | Sets whether or not line numbers are visible                  | false (default: true)  |
-| hardtab    | Sets whether or not tab characters are used for indentation   | true  (default: false) |
+| hardtab    | Sets whether or not tab characters are used for indentation   | true (default: false)  |
+| tablength  | Sets length of tab indentation                                | int (u8) (default: 4)  |

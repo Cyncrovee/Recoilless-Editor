@@ -17,13 +17,15 @@ pub fn run_config(input_area: &mut TextArea) {
     let config = parse_config();
     let mut linenumber = "empty".to_string();
     let mut hardtab= "empty".to_string();
+    let mut _tablength_string= "empty".to_string();
+    let mut tablength_int: u8 = 0;
     // Get linenumber from config if applicable
     match config.get("main", "linenumber") {
         Some(_) => {
             linenumber = config.get("main", "linenumber").unwrap();
         }
         None => {
-            //
+            // Pass
         }
     };
     // Get hardtab from config if applicable
@@ -32,28 +34,34 @@ pub fn run_config(input_area: &mut TextArea) {
             hardtab = config.get("main", "hardtab").unwrap();
         }
         None => {
-            //
+            // Pass
+        }
+    };
+    // Get tab length from config if applicable
+    match config.get("main", "tablength") {
+        Some(_) => {
+            _tablength_string = config.get("main", "tablength").unwrap();
+            match _tablength_string.parse::<u8>() {
+                Ok(ok_res) => tablength_int = ok_res,
+                Err(_) => {
+                    // Pass
+                }
+            }
+        }
+        None => {
+            // Pass
         }
     };
 
-    match config.get("main", "linenumber") {
-        Some(_) => {
-            linenumber = config.get("main", "linenumber").unwrap();
+    // Set config options if able/applicable
+    match linenumber.as_str() {
+        "false" => {
+            // Pass
         }
-        None => {
-            //
+        &_ => {
+            input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
         }
-    };
-    // Get hardtab from config if applicable
-    match config.get("main", "hardtab") {
-        Some(_) => {
-            hardtab = config.get("main", "hardtab").unwrap();
-        }
-        None => {
-            //
-        }
-    };
-
+    }
     match hardtab.as_str() {
         "true" => {
             input_area.set_hard_tab_indent(true);
@@ -62,12 +70,15 @@ pub fn run_config(input_area: &mut TextArea) {
             // Pass
         }
     }
-    match linenumber.as_str() {
-        "false" => {
-            // Pass
+    match tablength_int {
+        tablength_int if tablength_int >= 1 => {
+            input_area.set_tab_length(tablength_int);
         }
-        &_ => {
-            input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
+        0 => {
+            input_area.set_tab_length(4);
+        }
+        _ => {
+            input_area.set_tab_length(4);
         }
     }
 }
