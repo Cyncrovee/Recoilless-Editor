@@ -32,27 +32,12 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             file_type = "Text File";
             return file_type;
         }
-        "md" => {
-            file_type = "Markdown File";
-            return file_type;
-        }
+        // Configuration Files
         "cfg" => {
             file_type = "CFG File";
             return file_type;
         }
-        "XML" => {
-            file_type = "XML File";
-            return file_type;
-        }
-        "XAML" => {
-            file_type = "XAML File";
-            return file_type;
-        }
-        "AXAML" => {
-            file_type = "AXAML File";
-            return file_type;
-        }
-        "JSON" => {
+        "json" => {
             file_type = "JSON File";
             return file_type;
         }
@@ -60,23 +45,48 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             file_type = "TOML File";
             return file_type;
         }
+        "yaml" => {
+            file_type = "YAML FILE";
+            return file_type;
+        }
         "ini" => {
-            file_type = "INI Configuration File";
+            file_type = "INI File";
             return file_type;
         }
         "csv" => {
             file_type = "Comma Seperated Values File";
             return file_type;
         }
-        // Commented out due to confusion over c/c++ file extensions
-        "c" => {
-            file_type = "C/C++ Source File";
+        // UI/Markup Files
+        "md" => {
+            file_type = "Markdown File";
             return file_type;
         }
-        "cpp" => {
-            file_type = "C++ Source File";
+        "xml" => {
+            file_type = "XML File";
             return file_type;
         }
+        "xaml" => {
+            file_type = "XAML File";
+            return file_type;
+        }
+        "axaml" => {
+            file_type = "AXAML File";
+            return file_type;
+        }
+        "html" => {
+            file_type = "HTML File";
+            return file_type;
+        }
+        "xhtml" => {
+            file_type = "XHTML File";
+            return file_type;
+        }
+        "css" => {
+            file_type = "CSS File";
+            return file_type;
+        }
+        // Script Files
         "sh" => {
             file_type = "Shell Script";
             return file_type;
@@ -87,6 +97,15 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }
         "bat" => {
             file_type = "Batch File";
+            return file_type;
+        }
+        // Programmins Source Files
+        "c" => {
+            file_type = "C/C++ Source File";
+            return file_type;
+        }
+        "cpp" => {
+            file_type = "C++ Source File";
             return file_type;
         }
         "gd" => {
@@ -155,14 +174,6 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }
         "ts" => {
             file_type = "TypeScript Source File";
-            return file_type;
-        }
-        "html" => {
-            file_type = "HTML File";
-            return file_type;
-        }
-        "CSS" => {
-            file_type = "CSS File";
             return file_type;
         }
         &_ => {
