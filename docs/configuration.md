@@ -28,8 +28,9 @@ This will disable the line numbers in the editor (which are enabled by default)
 
 Below are all the currently avaiable options for configuration:
 
-| Option     | Function                                                      | Value(s)               |
-| ---------- | ------------------------------------------------------------- | ---------------------- |
-| linenumber | Sets whether or not line numbers are visible                  | false (default: true)  |
-| hardtab    | Sets whether or not tab characters are used for indentation   | true (default: false)  |
-| tablength  | Sets length of tab indentation                                | int (u8) (default: 4)  |
+| Option      | Function                                                                  | Value(s)          | Default |
+| ----------- | ------------------------------------------------------------------------- | --------          | ------- |
+| linenumber  | Sets whether or not line numbers are visible                              | false             | true    |
+| cursorstart | Sets whether or not the cursor jumps to the start of the file once loaded | false             | true    |
+| hardtab     | Sets whether or not tab characters are used for indentation               | true              | false   |
+| tablength   | Sets length of tab indentation                                            | int (u8, above 0) | 4       |

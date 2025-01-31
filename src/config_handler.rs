@@ -1,7 +1,7 @@
 use configparser::ini::Ini;
 use dirs::home_dir;
 use ratatui::style::Style;
-use tui_textarea::TextArea;
+use tui_textarea::{CursorMove, TextArea};
 
 pub fn parse_config() -> Ini {
     let lesser_config_path = "\\.config\\recoilless\\rcl_config.txt";
@@ -15,10 +15,11 @@ pub fn parse_config() -> Ini {
 
 pub fn run_config(input_area: &mut TextArea) {
     let config = parse_config();
-    let mut linenumber = "empty".to_string();
-    let mut hardtab= "empty".to_string();
+    let mut linenumber = "true".to_string();
+    let mut hardtab= "false".to_string();
     let mut _tablength_string= "empty".to_string();
     let mut tablength_int: u8 = 0;
+    let mut cursorstart = "true".to_string();
     // Get linenumber from config if applicable
     match config.get("main", "linenumber") {
         Some(_) => {
@@ -28,6 +29,14 @@ pub fn run_config(input_area: &mut TextArea) {
             // Pass
         }
     };
+    match config.get("main", "cursorstart") {
+        Some(_) => {
+            cursorstart = config.get("main", "cursorstart").unwrap();
+        }
+        None => {
+            // Pass
+        }
+    }
     // Get hardtab from config if applicable
     match config.get("main", "hardtab") {
         Some(_) => {
@@ -60,6 +69,16 @@ pub fn run_config(input_area: &mut TextArea) {
         }
         &_ => {
             input_area.set_line_number_style(Style::default().fg(ratatui::style::Color::LightCyan));
+        }
+    }
+    match cursorstart.as_str() {
+        "false" => {
+            input_area.move_cursor(CursorMove::End);
+            input_area.move_cursor(CursorMove::Bottom);
+        }
+        &_ => {
+            input_area.move_cursor(CursorMove::Head);
+            input_area.move_cursor(CursorMove::Top);
         }
     }
     match hardtab.as_str() {
