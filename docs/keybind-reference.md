@@ -9,6 +9,8 @@ There are some duplicates (i.e two keybinds that do the same thing), just due to
 
 ## Movement (Overview Mode)
 - hjkl/arrow keys: Move left, down, up and right
+- Space: Move right
+- Backspace: Move left
 - Ctrl + w: Move forward by word
 - Alt + w: Move backward by word
 - Ctrl + l: Move forward by line

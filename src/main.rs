@@ -176,48 +176,58 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                         input_area.cancel_selection();
                         input_area.move_cursor(CursorMove::Forward);
                     },
+                    Input { key: Key::Char(' '), .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Forward);
+                        status_bar.last_command = "| >";
+                    },
+                    Input { key: Key::Backspace, .. } => {
+                        input_area.cancel_selection();
+                        input_area.move_cursor(CursorMove::Back);
+                        status_bar.last_command = "| <";
+                    },
                     // Delete char
-                    Input { key: Key::Char('c'), ctrl: true, alt: true, ..} => {
+                    Input { key: Key::Char('c'), ctrl: true, alt: true, .. } => {
                         input_area.delete_next_char();
                         status_bar.last_command = "| DEL-CHAR";
                     }
                     // Move around by word
-                    Input { key: Key::Char('w'), ctrl: true, alt: false, ..} => {
+                    Input { key: Key::Char('w'), ctrl: true, alt: false, .. } => {
                         input_area.move_cursor(CursorMove::WordForward);
                         status_bar.last_command = "| WORD-FOR";
                     }
-                    Input { key: Key::Char('w'), ctrl: false, alt: true, ..} => {
+                    Input { key: Key::Char('w'), ctrl: false, alt: true, .. } => {
                         input_area.move_cursor(CursorMove::WordBack);
                         status_bar.last_command = "| WORD-BACK";
                     }
                     // Delete word
-                    Input { key: Key::Char('w'), ctrl: true, alt: true, ..} => {
+                    Input { key: Key::Char('w'), ctrl: true, alt: true, .. } => {
                         input_area.delete_next_word();
                         status_bar.last_command = "| DEL-WORD";
                     }
                     // Move around by line
-                    Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
+                    Input { key: Key::Char('l'), ctrl: true, alt: false, .. } => {
                         input_area.move_cursor(CursorMove::Down);
                         status_bar.last_command = "| LINE-FOR";
                     }
-                    Input { key: Key::Char('l'), ctrl: false, alt: true, ..} => {
+                    Input { key: Key::Char('l'), ctrl: false, alt: true, .. } => {
                         input_area.move_cursor(CursorMove::Up);
                         status_bar.last_command = "| LINE-BACK";
                     }
                     // Delete line
-                    Input { key: Key::Char('l'), ctrl: true, alt: true, ..} => {
+                    Input { key: Key::Char('l'), ctrl: true, alt: true, .. } => {
                         input_area.move_cursor(CursorMove::Head);
                         input_area.delete_line_by_end();
                         status_bar.last_command = "| DEL-LINE";
                     }
                     // Make a newline
-                    Input { key: Key::Char('n'), ctrl: true, alt: false, ..} => {
+                    Input { key: Key::Char('n'), ctrl: true, alt: false, .. } => {
                         input_area.move_cursor(CursorMove::Up);
                         input_area.move_cursor(CursorMove::End);
                         input_area.insert_newline();
                         status_bar.last_command = "| NEW-LINE-UP";
                     },
-                    Input { key: Key::Char('n'), ctrl: false, alt: true, ..} => {
+                    Input { key: Key::Char('n'), ctrl: false, alt: true, .. } => {
                         input_area.move_cursor(CursorMove::End);
                         input_area.insert_newline();
                         status_bar.last_command = "| NEW-LINE-DOWN";
@@ -251,35 +261,35 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                         input_area.set_cursor_style(Style::default().fg(ratatui::style::Color::LightCyan).add_modifier(Modifier::REVERSED));
                     }
                     // Jump to start/end of paragraph
-                    Input { key: Key::Char('p'), ctrl: true, alt: false, ..} => {
+                    Input { key: Key::Char('p'), ctrl: true, alt: false, .. } => {
                         input_area.move_cursor(CursorMove::ParagraphForward);
                         status_bar.last_command = "| JUMP-PAR-FOR";
                     }
-                    Input { key: Key::Char('p'), ctrl: false, alt: true, ..} => {
+                    Input { key: Key::Char('p'), ctrl: false, alt: true, .. } => {
                         input_area.move_cursor(CursorMove::ParagraphBack);
                         status_bar.last_command = "| JUMP-PAR-BACK";
                     }
                     // Jump to start/end of file
-                    Input { key: Key::Char('j'), ctrl: true, alt: false, ..} => {
+                    Input { key: Key::Char('j'), ctrl: true, alt: false, .. } => {
                         input_area.move_cursor(CursorMove::Top);
                         status_bar.last_command = "| JUMP-FILE-START";
                     }
-                    Input { key: Key::Char('j'), ctrl: false, alt: true, ..} => {
+                    Input { key: Key::Char('j'), ctrl: false, alt: true, .. } => {
                         input_area.move_cursor(CursorMove::Bottom);
                         status_bar.last_command = "| JUMP-FILE-END";
                     }
                     // Undo
-                    Input { key: Key::Char('u'), ..} => {
+                    Input { key: Key::Char('u'), .. } => {
                         input_area.undo();
                         status_bar.last_command = "| UNDO";
                     }
                     // Redo
-                    Input { key: Key::Char('r'), ..} => {
+                    Input { key: Key::Char('r'), .. } => {
                         input_area.redo();
                         status_bar.last_command = "| REDO";
                     }
                     // Paste
-                    Input { key: Key::Char('p'), ..} => {
+                    Input { key: Key::Char('p'), .. } => {
                         input_area.paste();
                         status_bar.last_command = "| PASTE";
                     }
