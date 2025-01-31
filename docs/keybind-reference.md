@@ -26,7 +26,8 @@ There are some duplicates (i.e two keybinds that do the same thing), just due to
 
 ## Editing (Overview Mode)
 - Ctrl + Alt + c: Delete character
-- Ctrl + Alt + w: Delete word
+- Ctrl + Alt + w: Delete word (forward)
+- Ctrl + Alt + p: Delete paragraph (forward)
 - Ctrl + Alt + l: Delete line
 - Ctrl + n :Make a new line above current line
 - Alt + n :Make a new line below current line

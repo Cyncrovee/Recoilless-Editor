@@ -202,7 +202,7 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                         input_area.move_cursor(CursorMove::WordBack);
                         status_bar.last_command = "| WORD-BACK";
                     }
-                    // Delete word
+                    // Delete word (forward)
                     Input { key: Key::Char('w'), ctrl: true, alt: true, .. } => {
                         input_area.delete_next_word();
                         status_bar.last_command = "| DEL-WORD";
@@ -270,6 +270,14 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     Input { key: Key::Char('p'), ctrl: false, alt: true, .. } => {
                         input_area.move_cursor(CursorMove::ParagraphBack);
                         status_bar.last_command = "| JUMP-PAR-BACK";
+                    }
+                    // Delete paragraph (forward)
+                    Input { key: Key::Char('p'), ctrl: true, alt: true, .. } => {
+                        input_area.start_selection();
+                        input_area.move_cursor(CursorMove::ParagraphForward);
+                        input_area.cut();
+                        input_area.cancel_selection();
+                        status_bar.last_command = "| DEL-PAR-FOR";
                     }
                     // Jump to start/end of file
                     Input { key: Key::Char('j'), ctrl: true, alt: false, .. } => {
