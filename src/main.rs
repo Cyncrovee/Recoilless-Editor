@@ -29,10 +29,10 @@ struct StatusBarStruct<'a> {
     seperator: &'a str
 }
 
-fn setup(input_area: TextArea, status_bar: StatusBarStruct, is_edit_mode: bool, editor_mode: &str, is_modified: bool, file_path: String, file_size: String, file_type: &str) -> Result<()> {
+fn setup(input_area: TextArea, status_bar: StatusBarStruct, is_ovr_mode: bool, editor_mode: &str, is_modified: bool, file_path: String, file_size: String, file_type: &str) -> Result<()> {
     color_eyre::install()?;
     let terminal = ratatui::init();
-    let result = run(terminal, input_area, status_bar, is_edit_mode, editor_mode, is_modified, file_path, file_size, file_type);
+    let result = run(terminal, input_area, status_bar, is_ovr_mode, editor_mode, is_modified, file_path, file_size, file_type);
     ratatui::restore();
     result
 }
@@ -44,7 +44,7 @@ fn main() {
     drop(test);
 
     // Set editor mode variables
-    let is_edit_mode = true;
+    let is_ovr_mode = true;
     let editor_mode = "Ovr";
     // Get file path, file size and file type
     let file_path = get_file_path();
@@ -84,10 +84,10 @@ fn main() {
     let is_modified = false;
 
     // Continue to setup()
-    let _ = setup(input_area, status_bar, is_edit_mode, editor_mode, is_modified, file_path.clone(), file_size, file_type);
+    let _ = setup(input_area, status_bar, is_ovr_mode, editor_mode, is_modified, file_path.clone(), file_size, file_type);
 }
 
-fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: StatusBarStruct, mut is_edit_mode: bool, mut editor_mode: &str, mut is_modified: bool, file_path: String, mut file_size: String, file_type: &str) -> Result<()> {
+fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: StatusBarStruct, mut is_ovr_mode: bool, mut editor_mode: &str, mut is_modified: bool, file_path: String, mut file_size: String, file_type: &str) -> Result<()> {
     // Main loop to draw widgets and handle key inputs
     loop {
         terminal.draw(|frame| {
@@ -96,11 +96,11 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
             frame.render_widget(&status_bar.status_paragraph, status_bar.status_area.clamp(frame.area()));
         })?;
         // Get key input(s) and run appropriate functions for said input, or input it to the text area
-        match is_edit_mode {
+        match is_ovr_mode {
             false => {
                 match crossterm::event::read()?.into() {
                     Input { key: Key::Esc, .. } => {
-                        is_edit_mode = true;
+                        is_ovr_mode = true;
                         editor_mode = "Ovr";
                         input_area.set_cursor_style(Style::default().bg(ratatui::style::Color::Reset));
                         input_area.set_cursor_style(Style::default().fg(ratatui::style::Color::Reset).add_modifier(Modifier::REVERSED));
@@ -118,12 +118,12 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
             }
             true => {
                 match crossterm::event::read()?.into() {
-                    // Exit program
+                    // Exit program, either via end key or Ctrl + Alt + Backspace
                     Input { key: Key::End, .. } => break Ok(()),
                     Input { key: Key::Backspace, ctrl: true, alt: true, .. } => break Ok(()),
                     // Go to insert mode
                     Input { key: Key::Char('i'), .. } => {
-                        is_edit_mode = false;
+                        is_ovr_mode = false;
                         editor_mode = "Ins";
                         input_area.set_cursor_style(Style::default().bg(ratatui::style::Color::LightCyan));
                         input_area.set_cursor_style(Style::default().fg(ratatui::style::Color::LightCyan).add_modifier(Modifier::REVERSED));
