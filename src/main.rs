@@ -197,12 +197,12 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                     }
                     // Move around by line
                     Input { key: Key::Char('l'), ctrl: true, alt: false, ..} => {
-                        input_area.move_cursor(CursorMove::Up);
-                        status_bar.last_command = "| LINE-BACK";
-                    }
-                    Input { key: Key::Char('l'), ctrl: false, alt: true, ..} => {
                         input_area.move_cursor(CursorMove::Down);
                         status_bar.last_command = "| LINE-FOR";
+                    }
+                    Input { key: Key::Char('l'), ctrl: false, alt: true, ..} => {
+                        input_area.move_cursor(CursorMove::Up);
+                        status_bar.last_command = "| LINE-BACK";
                     }
                     // Delete line
                     Input { key: Key::Char('l'), ctrl: true, alt: true, ..} => {
