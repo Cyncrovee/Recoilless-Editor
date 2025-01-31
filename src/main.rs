@@ -67,7 +67,6 @@ fn main() {
 
     // Declare input_area and it's block/styling
     let mut input_area: TextArea = TextArea::default();
-    run_config(&mut input_area);
     input_area.set_block(
         Block::default()
             .title(file_path.clone())
@@ -82,6 +81,9 @@ fn main() {
     // Declare a bool that will be true when input_area.input(input); is called (see the input events below)
     // And be false after saving (except when saving and quitting)
     let is_modified = false;
+
+    // Apply user config
+    run_config(&mut input_area);
 
     // Continue to setup()
     let _ = setup(input_area, status_bar, is_ovr_mode, editor_mode, is_modified, file_path.clone(), file_size, file_type);
