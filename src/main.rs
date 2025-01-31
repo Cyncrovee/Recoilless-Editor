@@ -223,13 +223,32 @@ fn run(mut terminal: DefaultTerminal, mut input_area: TextArea, mut status_bar: 
                         status_bar.last_command = "| NEW-LINE-DOWN";
                     }
                     // Jump to start/end of line
-                    Input { key: Key::Char('e'), ctrl: true, alt: false, ..} => {
+                    Input { key: Key::Char('e'), ctrl: true, alt: false, shift: false } => {
                         input_area.move_cursor(CursorMove::Head);
                         status_bar.last_command = "| JUMP-LINE-START";
                     }
-                    Input { key: Key::Char('e'), ctrl: false, alt: true, ..} => {
+                    Input { key: Key::Char('e'), ctrl: false, alt: true, shift: false } => {
                         input_area.move_cursor(CursorMove::End);
                         status_bar.last_command = "| JUMP-LINE-END";
+                    }
+                    // Jump to start/end of line and enter insert mode
+                    Input { key: Key::Char('E'), ctrl: true, alt: false, shift: true } => {
+                        input_area.move_cursor(CursorMove::Head);
+                        status_bar.last_command = "| JUMP-LINE-START";
+
+                        is_ovr_mode = false;
+                        editor_mode = "Ins";
+                        input_area.set_cursor_style(Style::default().bg(ratatui::style::Color::LightCyan));
+                        input_area.set_cursor_style(Style::default().fg(ratatui::style::Color::LightCyan).add_modifier(Modifier::REVERSED));
+                    }
+                    Input { key: Key::Char('E'), ctrl: false, alt: true, shift: true } => {
+                        input_area.move_cursor(CursorMove::End);
+                        status_bar.last_command = "| JUMP-LINE-END";
+
+                        is_ovr_mode = false;
+                        editor_mode = "Ins";
+                        input_area.set_cursor_style(Style::default().bg(ratatui::style::Color::LightCyan));
+                        input_area.set_cursor_style(Style::default().fg(ratatui::style::Color::LightCyan).add_modifier(Modifier::REVERSED));
                     }
                     // Jump to start/end of paragraph
                     Input { key: Key::Char('p'), ctrl: true, alt: false, ..} => {
