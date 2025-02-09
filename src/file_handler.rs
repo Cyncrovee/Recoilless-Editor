@@ -1,9 +1,17 @@
-use std::{fs, io::{self, Write}};
+use std::{
+    fs,
+    io::{self, Write},
+};
 use tui_textarea::TextArea;
 
 // Fetches the file's size
 pub fn get_file_size(file_path: &String) -> String {
-    let mut file_size = fs::File::open(&file_path).expect("Failed to open file in get_file_size").metadata().expect("Failed to get file metadata in get_file_size").len().to_string();
+    let mut file_size = fs::File::open(&file_path)
+        .expect("Failed to open file in get_file_size")
+        .metadata()
+        .expect("Failed to get file metadata in get_file_size")
+        .len()
+        .to_string();
     file_size.push_str(" Bytes Saved ");
     return file_size;
 }
@@ -12,10 +20,16 @@ pub fn get_file_size(file_path: &String) -> String {
 pub fn save_file(is_modified: &bool, file_path: &String, input_area: &mut TextArea) {
     match is_modified {
         true => {
-            let mut writer = io::BufWriter::new(fs::File::create(&file_path).expect("Failed to create BufWriter!"));
+            let mut writer = io::BufWriter::new(
+                fs::File::create(&file_path).expect("Failed to create BufWriter!"),
+            );
             for l in input_area.lines() {
-                writer.write_all(l.as_bytes()).expect("Error when writing to file!");
-                writer.write_all(b"\n").expect("Error when writing to file!");
+                writer
+                    .write_all(l.as_bytes())
+                    .expect("Error when writing to file!");
+                writer
+                    .write_all(b"\n")
+                    .expect("Error when writing to file!");
             }
             drop(writer);
         }

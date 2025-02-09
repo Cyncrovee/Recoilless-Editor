@@ -30,7 +30,7 @@ pub fn get_file_path() -> String {
     match fs::exists(&input_path).unwrap() {
         true => {
             let full_input_path = std::path::absolute(&input_path).unwrap();
-			return full_input_path.into_os_string().into_string().unwrap();
+            return full_input_path.into_os_string().into_string().unwrap();
             // return input_path_global;
         }
         false => {
@@ -44,15 +44,15 @@ pub fn get_file_path() -> String {
 fn show_help() {
     println!("------------------------------------------------------------------------");
     println!("To open a file in Recoilless Editor, you can simply add the name or path to the file as the first argument");
-	println!("This works from the current working directory or the absoloute path");
-	println!("");
-	println!("When running with cargo, you can add arguments like this:");
-	println!("cargo run -- example_arg");
-	println!("");
-	println!("To exit the program without saving, press the 'end' key or Ctrl + Alt + Backspace, possibly near the page down/home/del keys");
-	println!("To exit the program with saving, press the Ctrl + Alt + s keys");
+    println!("This works from the current working directory or the absoloute path");
     println!("");
-	println!("For more keybinds, refer to the keybind reference file or run the program with -k or --keys as the first argument");
+    println!("When running with cargo, you can add arguments like this:");
+    println!("cargo run -- example_arg");
+    println!("");
+    println!("To exit the program without saving, press the 'end' key or Ctrl + Alt + Backspace, possibly near the page down/home/del keys");
+    println!("To exit the program with saving, press the Ctrl + Alt + s keys");
+    println!("");
+    println!("For more keybinds, refer to the keybind reference file or run the program with -k or --keys as the first argument");
     println!("------------------------------------------------------------------------");
     std::process::exit(0);
 }

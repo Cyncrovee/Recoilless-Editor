@@ -16,8 +16,8 @@ pub fn parse_config() -> Ini {
 pub fn run_config(input_area: &mut TextArea) {
     let config = parse_config();
     let mut linenumber = "true".to_string();
-    let mut hardtab= "false".to_string();
-    let mut _tablength_string= "empty".to_string();
+    let mut hardtab = "false".to_string();
+    let mut _tablength_string = "empty".to_string();
     let mut tablength_int: u8 = 0;
     let mut cursorstart = "true".to_string();
     // Get linenumber from config if applicable
