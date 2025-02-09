@@ -71,6 +71,15 @@ pub fn convert_extension(mut file_type: &str) -> &str {
             file_type = "Comma Seperated Values File";
             return file_type;
         }
+        // Git Specific Files
+        "gitignore" => {
+            file_type = "Git Ignore File";
+            return file_type;
+        }
+        "gitattributes" => {
+            file_type = "Git Attributes File";
+            return file_type;
+        }
         // UI/Markup Files
         "md" => {
             file_type = "Markdown File";
@@ -115,11 +124,32 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }
         // Programmins Source Files
         "c" => {
+            file_type = "C Source File";
+            return file_type;
+        }
+        "h" => {
             file_type = "C/C++ Source File";
             return file_type;
         }
-        "cpp" => {
+        "cpp" | "C" | "cc" | "cxx" | "c++" | "H" | "hh" | "hpp" | "hxx" | "h++" | "cppm"
+        | "ixx" => {
             file_type = "C++ Source File";
+            return file_type;
+        }
+        "r" => {
+            file_type = "R Source File";
+            return file_type;
+        }
+        "scala" | "sc" => {
+            file_type = "Scala Source File";
+            return file_type;
+        }
+        "ml" => {
+            file_type = "OCaml File";
+            return file_type;
+        }
+        "mll" => {
+            file_type = "OCamllex File";
             return file_type;
         }
         "gd" => {
@@ -136,6 +166,18 @@ pub fn convert_extension(mut file_type: &str) -> &str {
         }
         "cs" => {
             file_type = "C# Source File";
+            return file_type;
+        }
+        "fs" => {
+            file_type = "F# Source File";
+            return file_type;
+        }
+        "hs" => {
+            file_type = "Haskell";
+            return file_type;
+        }
+        "erl" => {
+            file_type = "Erlang Source File";
             return file_type;
         }
         "py" => {
